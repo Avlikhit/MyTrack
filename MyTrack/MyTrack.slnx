@@ -1,3 +1,9 @@
 <Solution>
   <Project Path="MyTrack.Api/MyTrack.Api.csproj" />
+  <Project Path="MyTrack.Application/MyTrack.Application.csproj" />
+  <Project Path="MyTrack.Contracts/MyTrack.Contracts.csproj" />
+  <Project Path="MyTrack.Domain/MyTrack.Domain.csproj" />
+  <Project Path="MyTrack.Infrastructure/MyTrack.Infrastructure.csproj" />
+  <Project Path="MyTrack.Shared/MyTrack.Shared.csproj" />
+  <Project Path="MyTrack.Tests/MyTrack.Tests.csproj" />
 </Solution>
