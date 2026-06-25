@@ -197,6 +197,17 @@ Example:
 > Estimated gross pay for this month is $XXXX. Please manage your expenses accordingly.
 
 ---
+## FR-008 - Privacy and Security
+
+### Requirements
+
+- The application shall require user authentication.
+- Passwords shall be securely hashed and never stored in plain text.
+- Sensitive configuration values shall not be stored in source control.
+- All communication shall use HTTPS.
+- Data shall be stored locally by default.
+- AI-powered features shall be optional and user-controlled.
+- Future versions may encrypt sensitive financial information.
 
 # Business Rules
 
@@ -252,6 +263,9 @@ Planned features include:
 - File attachments
 
 ---
+# AI Principle:
+
+MyTrack will use a local AI model by default for all AI-powered features. User data will remain on the local machine and will not be sent to external AI services unless the user explicitly enables a future cloud AI integration.
 
 # Revision History
 
