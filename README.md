@@ -1,21 +1,92 @@
 # MyTrack
 
-Personal Enterprise Productivity Portal built using the latest Microsoft technologies.
+> A personal enterprise productivity platform built to learn modern full-stack software development using the latest Microsoft technologies.
 
 ---
 
-## Project Goal
+## Overview
 
-MyTrack is a personal productivity platform created to learn enterprise software development from scratch.
+MyTrack is a personal productivity and work management application designed to simulate a real-world enterprise software project.
 
-The application will help me:
+The goal of this project is not only to build a useful application for tracking daily work, payroll, reports, and personal productivity, but also to gain hands-on experience with enterprise software architecture, best practices, and modern development workflows.
 
-- Track daily work
+This repository will evolve through multiple development stages, with each stage focusing on a different aspect of enterprise application development.
+
+---
+
+# Objectives
+
+The primary objectives of MyTrack are to:
+
+- Track daily work activities
 - Generate daily, weekly, and monthly summaries
-- Calculate payroll and taxes
-- Generate reports
+- Calculate payroll, taxes, and take-home pay
+- Produce reports and dashboards
 - Learn enterprise application architecture
-- Practice GitHub, CI/CD, testing, and deployment
+- Practice clean code principles
+- Learn GitHub workflows and CI/CD
+- Build a complete production-style web application from scratch
+
+---
+
+# Planned Features
+
+## Work Management
+
+- Daily work log
+- Task tracking
+- Ticket management
+- Project tracking
+- Time tracking
+- Notes and learnings
+- Daily accomplishments
+
+---
+
+## Reports
+
+- Daily Summary
+- Weekly Summary
+- Monthly Summary
+- Project Reports
+- Time Reports
+- Productivity Dashboard
+
+---
+
+## Payroll
+
+- Hourly Pay
+- Salary Support
+- Gross Pay Calculation
+- Tax Estimation
+- Take Home Pay
+- Monthly Payroll Reports
+
+---
+
+## Dashboard
+
+- Productivity Overview
+- Recent Activities
+- Charts
+- Statistics
+- Goals
+- Progress Tracking
+
+---
+
+## Future Enhancements
+
+- AI-powered work summaries
+- Calendar integration
+- Email reminders
+- File attachments
+- Notifications
+- Mobile responsive UI
+- Dark mode
+- Export to PDF/Excel
+- Azure deployment
 
 ---
 
@@ -23,87 +94,141 @@ The application will help me:
 
 | Layer | Technology |
 |--------|------------|
-| Frontend | Angular (Later) |
-| Backend | ASP.NET Core Web API (.NET 10) |
+| Framework | .NET 10 |
+| Backend | ASP.NET Core Web API |
+| Frontend | Angular (Planned) |
 | Database | SQL Server |
 | ORM | Entity Framework Core |
-| Authentication | ASP.NET Identity |
+| Authentication | ASP.NET Core Identity |
 | Testing | xUnit |
+| Documentation | Markdown |
 | Source Control | GitHub |
 | API Testing | Swagger |
+| CI/CD | GitHub Actions (Planned) |
 
 ---
 
-# Development Roadmap
+# Solution Architecture
 
-- [x] Stage 1 - Solution Setup
-- [ ] Stage 2 - Architecture
-- [ ] Stage 3 - Database
-- [ ] Stage 4 - Work Log Module
-- [ ] Stage 5 - Payroll Module
-- [ ] Stage 6 - Reports
-- [ ] Stage 7 - Authentication
-- [ ] Stage 8 - Testing
-- [ ] Stage 9 - CI/CD
-- [ ] Stage 10 - Deployment
-
----
-
-# Stage 1 - Solution Setup
-
-## Objective
-
-Create the initial enterprise solution and verify that the Web API runs successfully.
-
-### Completed
-
-- Created GitHub repository
-- Created MyTrack solution
-- Added ASP.NET Core Web API project
-- Enabled Swagger
-- Successfully ran the API locally
-
-### Folder Structure
-
-```text
+```
 MyTrack
 │
 ├── MyTrack.Api
-└── README.md
+├── MyTrack.Application
+├── MyTrack.Domain
+├── MyTrack.Infrastructure
+├── MyTrack.DataObjects
+├── MyTrack.Shared
+├── MyTrack.Tests
+│
+├── docs
+│
+├── README.md
+└── CHANGELOG.md
 ```
 
-### What I Learned
-
-- How to create a GitHub repository
-- Difference between a Repository and a Solution
-- How ASP.NET Core Web API starts
-- What Swagger is
-- What Program.cs does
-- Why Visual Studio creates WeatherForecast by default
-
-### Challenges
-
-- Visual Studio threw an HRESULT error while creating the solution.
-- Swagger wasn't configured initially.
-
-### Resolution
-
-- Reopened the solution successfully.
-- Installed Swagger support.
-- Updated Program.cs.
-- Configured launchSettings.json.
+Each project has its own README describing its responsibilities and implementation details.
 
 ---
 
-## Commits
+# Project Roadmap
 
-| Commit | Description |
-|---------|-------------|
-| Initial Commit | Created repository |
-| Stage 1 | Created Web API and enabled Swagger |
+| Stage | Status |
+|--------|--------|
+| Stage 1 - Solution Setup | ✅ Completed |
+| Stage 2 - Enterprise Architecture | ⏳ Planned |
+| Stage 3 - Database Design | ⏳ Planned |
+| Stage 4 - Work Log Module | ⏳ Planned |
+| Stage 5 - Payroll Module | ⏳ Planned |
+| Stage 6 - Reports | ⏳ Planned |
+| Stage 7 - Authentication | ⏳ Planned |
+| Stage 8 - Testing | ⏳ Planned |
+| Stage 9 - CI/CD | ⏳ Planned |
+| Stage 10 - Deployment | ⏳ Planned |
 
 ---
 
-## Next Stage
+# Repository Structure
 
-Enterprise Architecture
+```
+MyTrack
+│
+├── docs/
+├── MyTrack.Api/
+├── MyTrack.Application/
+├── MyTrack.Domain/
+├── MyTrack.Infrastructure/
+├── MyTrack.DataObjects/
+├── MyTrack.Shared/
+├── MyTrack.Tests/
+│
+├── README.md
+├── CHANGELOG.md
+└── .gitignore
+```
+
+---
+
+# Development Philosophy
+
+This project is being developed using enterprise software development practices.
+
+Every feature will follow the same lifecycle:
+
+1. Planning
+2. Design
+3. Development
+4. Documentation
+5. Testing
+6. Code Review
+7. Git Commit
+8. Pull Request
+9. Merge
+
+The goal is to learn not only how to build software, but also how enterprise software is designed, documented, tested, and maintained.
+
+---
+
+# Documentation
+
+Project documentation is organized into two levels.
+
+## Repository Documentation
+
+- README.md
+- CHANGELOG.md
+- docs/
+
+## Project Documentation
+
+Each project within the solution contains its own README explaining:
+
+- Purpose
+- Responsibilities
+- Dependencies
+- Architecture
+- Folder Structure
+- Best Practices
+- Future Enhancements
+
+---
+
+# Current Status
+
+Current Version
+
+```
+v0.1.0
+```
+
+Current Stage
+
+```
+Stage 1 - Solution Setup
+```
+
+---
+
+# License
+
+This project is intended for personal learning and educational purposes.
