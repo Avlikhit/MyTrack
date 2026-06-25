@@ -1,15 +1,26 @@
+using MyTrack.Application.Interfaces;
+using MyTrack.Application.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region Service Registration
+
+// Add framework services.
 builder.Services.AddControllers();
 
-// Swagger
+// Register application services.
+builder.Services.AddScoped<IWorkLogService, WorkLogService>();
+
+// Register Swagger/OpenAPI.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#endregion
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Middleware Pipeline
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -21,5 +32,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+#endregion
 
 app.Run();
