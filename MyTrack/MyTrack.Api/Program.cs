@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using MyTrack.Application.Interfaces;
 using MyTrack.Application.Services;
+using MyTrack.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 #endregion
 
+builder.Services.AddDbContext<MyTrackDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyTrackDatabase")));
 var app = builder.Build();
 
 #region Middleware Pipeline
