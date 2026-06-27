@@ -7,9 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MyTrack.Contracts\MyTrack.Contracts.csproj" />
     <ProjectReference Include="..\MyTrack.Domain\MyTrack.Domain.csproj" />
     <ProjectReference Include="..\MyTrack.Shared\MyTrack.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

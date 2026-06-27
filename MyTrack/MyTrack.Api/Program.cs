@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MyTrack.Application.Interfaces;
 using MyTrack.Application.Services;
 using MyTrack.Infrastructure.Data;
+using MyTrack.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 
 // Register application services.
 builder.Services.AddScoped<IWorkLogService, WorkLogService>();
+builder.Services.AddScoped<IWorkLogRepository, WorkLogRepository>();
 
 // Register Swagger/OpenAPI.
 builder.Services.AddEndpointsApiExplorer();

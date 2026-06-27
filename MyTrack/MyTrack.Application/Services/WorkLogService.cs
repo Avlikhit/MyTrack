@@ -10,12 +10,19 @@ namespace MyTrack.Application.Services;
 /// </summary>
 public class WorkLogService : IWorkLogService
 {
+    private readonly IWorkLogRepository _workLogRepository;
+
     /// <summary>
-    /// Creates a new work log.
+    /// Initializes a new instance of the <see cref="WorkLogService"/> class.
     /// </summary>
-    /// <param name="request">The work log creation request.</param>
-    /// <returns>The created work log response.</returns>
-    public Task<WorkLogResponse> CreateAsync(CreateWorkLogRequest request)
+    /// <param name="workLogRepository">The work log repository.</param>
+    public WorkLogService(IWorkLogRepository workLogRepository)
+    {
+        _workLogRepository = workLogRepository;
+    }
+
+    /// <inheritdoc/>
+    public async Task<WorkLogResponse> CreateAsync(CreateWorkLogRequest request)
     {
         if (request is null)
         {
@@ -34,7 +41,6 @@ public class WorkLogService : IWorkLogService
 
         var workLog = new WorkLog
         {
-            Id = 1,
             WorkDate = request.WorkDate,
             ProjectId = request.ProjectId,
             TicketNumber = request.TicketNumber,
@@ -47,47 +53,38 @@ public class WorkLogService : IWorkLogService
             CreatedDateTime = DateTime.UtcNow
         };
 
-        var response = MapToResponse(workLog);
+        var savedWorkLog = await _workLogRepository.AddAsync(workLog);
 
-        return Task.FromResult(response);
+        return MapToResponse(savedWorkLog);
     }
 
-    /// <summary>
-    /// Gets a work log by its unique identifier.
-    /// </summary>
-    /// <param name="id">The work log identifier.</param>
-    /// <returns>The matching work log response, if found.</returns>
-    public Task<WorkLogResponse?> GetByIdAsync(int id)
+    /// <inheritdoc/>
+    public async Task<WorkLogResponse?> GetByIdAsync(int id)
     {
-        return Task.FromResult<WorkLogResponse?>(null);
+        var workLog = await _workLogRepository.GetByIdAsync(id);
+
+        return workLog is null ? null : MapToResponse(workLog);
     }
 
-    /// <summary>
-    /// Gets all work logs for a specific date.
-    /// </summary>
-    /// <param name="workDate">The work date.</param>
-    /// <returns>A collection of work log responses.</returns>
-    public Task<IEnumerable<WorkLogResponse>> GetByDateAsync(DateOnly workDate)
+    /// <inheritdoc/>
+    public async Task<IEnumerable<WorkLogResponse>> GetByDateAsync(DateOnly workDate)
     {
-        return Task.FromResult(Enumerable.Empty<WorkLogResponse>());
+        var workLogs = await _workLogRepository.GetByDateAsync(workDate);
+
+        return workLogs.Select(MapToResponse);
     }
 
-    /// <summary>
-    /// Gets all work logs within a date range.
-    /// </summary>
-    /// <param name="startDate">The start date.</param>
-    /// <param name="endDate">The end date.</param>
-    /// <returns>A collection of work log responses.</returns>
-    public Task<IEnumerable<WorkLogResponse>> GetByDateRangeAsync(DateOnly startDate, DateOnly endDate)
+    /// <inheritdoc/>
+    public async Task<IEnumerable<WorkLogResponse>> GetByDateRangeAsync(DateOnly startDate, DateOnly endDate)
     {
-        return Task.FromResult(Enumerable.Empty<WorkLogResponse>());
+        var workLogs = await _workLogRepository.GetByDateRangeAsync(startDate, endDate);
+
+        return workLogs.Select(MapToResponse);
     }
 
     /// <summary>
     /// Maps a WorkLog domain entity to a WorkLogResponse contract.
     /// </summary>
-    /// <param name="workLog">The work log entity.</param>
-    /// <returns>The work log response.</returns>
     private static WorkLogResponse MapToResponse(WorkLog workLog)
     {
         return new WorkLogResponse
