@@ -100,4 +100,74 @@ public class WorkLogsController : ControllerBase
             });
         }
     }
+
+    /// <summary>
+    /// Gets all work logs for a specific date.
+    /// </summary>
+    /// <param name="workDate">The work date.</param>
+    /// <returns>Work logs for the selected date.</returns>
+    [HttpGet("date/{workDate}")]
+    [ProducesResponseType(typeof(IEnumerable<WorkLogResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<WorkLogResponse>>> GetByDateAsync(DateOnly workDate)
+    {
+        try
+        {
+            var response = await _workLogService.GetByDateAsync(workDate);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while getting work logs for date {WorkDate}.", workDate);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                message = "An unexpected error occurred while retrieving work logs by date."
+            });
+        }
+    }
+
+    /// <summary>
+    /// Gets all work logs within a date range.
+    /// </summary>
+    /// <param name="startDate">The start date.</param>
+    /// <param name="endDate">The end date.</param>
+    /// <returns>Work logs within the selected date range.</returns>
+    [HttpGet("range")]
+    [ProducesResponseType(typeof(IEnumerable<WorkLogResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<WorkLogResponse>>> GetByDateRangeAsync(
+        [FromQuery] DateOnly startDate,
+        [FromQuery] DateOnly endDate)
+    {
+        try
+        {
+            if (startDate > endDate)
+            {
+                return BadRequest(new
+                {
+                    message = "Start date cannot be greater than end date."
+                });
+            }
+
+            var response = await _workLogService.GetByDateRangeAsync(startDate, endDate);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Unexpected error occurred while getting work logs from {StartDate} to {EndDate}.",
+                startDate,
+                endDate);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                message = "An unexpected error occurred while retrieving work logs by date range."
+            });
+        }
+    }
 }
