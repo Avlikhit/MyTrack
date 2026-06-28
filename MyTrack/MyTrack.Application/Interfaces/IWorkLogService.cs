@@ -16,6 +16,23 @@ public interface IWorkLogService
     Task<WorkLogResponse> CreateAsync(CreateWorkLogRequest request);
 
     /// <summary>
+    /// Updates an existing work log.
+    /// </summary>
+    /// <param name="id">The work log identifier.</param>
+    /// <param name="request">The work log update request.</param>
+    /// <returns>The updated work log response, if found.</returns>
+    Task<WorkLogResponse?> UpdateAsync(int id, UpdateWorkLogRequest request);
+
+    /// <summary>
+    /// Deletes an existing work log.
+    /// </summary>
+    /// <param name="id">The unique identifier of the work log.</param>
+    /// <returns>
+    /// <c>true</c> if the work log was deleted successfully; otherwise, <c>false</c>.
+    /// </returns>
+    Task<bool> DeleteAsync(int id);
+
+    /// <summary>
     /// Gets a work log by its unique identifier.
     /// </summary>
     /// <param name="id">The work log identifier.</param>

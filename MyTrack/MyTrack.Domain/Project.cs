@@ -44,4 +44,20 @@ public class Project
     /// Gets or sets the work logs associated with this project.
     /// </summary>
     public ICollection<WorkLog> WorkLogs { get; set; } = new List<WorkLog>();
+
+    /// <summary>
+    /// Gets or sets the color code used to display the project in the UI.
+    /// Example: #4F46E5.
+    /// </summary>
+    public string? ColorCode { get; set; }
+
+    /// <summary>
+    /// Gets or sets the display order for showing projects in dropdowns and lists.
+    /// </summary>
+    public int DisplayOrder { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this project is the default selected project.
+    /// </summary>
+    public bool IsDefault { get; set; }
 }

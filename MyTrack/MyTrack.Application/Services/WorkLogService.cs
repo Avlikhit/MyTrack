@@ -59,6 +59,73 @@ public class WorkLogService : IWorkLogService
     }
 
     /// <inheritdoc/>
+    public async Task<WorkLogResponse?> UpdateAsync(int id, UpdateWorkLogRequest request)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        if (id <= 0)
+        {
+            throw new ArgumentException("WorkLog id is required.", nameof(id));
+        }
+
+        if (request.ProjectId <= 0)
+        {
+            throw new ArgumentException("ProjectId is required.", nameof(request));
+        }
+
+        if (request.HoursWorked <= 0)
+        {
+            throw new ArgumentException("HoursWorked must be greater than zero.", nameof(request));
+        }
+
+        var existingWorkLog = await _workLogRepository.GetByIdAsync(id);
+
+        if (existingWorkLog is null)
+        {
+            return null;
+        }
+
+        existingWorkLog.WorkDate = request.WorkDate;
+        existingWorkLog.ProjectId = request.ProjectId;
+        existingWorkLog.TicketNumber = request.TicketNumber;
+        existingWorkLog.TaskType = request.TaskType;
+        existingWorkLog.Description = request.Description;
+        existingWorkLog.HoursWorked = request.HoursWorked;
+        existingWorkLog.Blockers = request.Blockers;
+        existingWorkLog.Learnings = request.Learnings;
+        existingWorkLog.NextSteps = request.NextSteps;
+        existingWorkLog.ModifiedDateTime = DateTime.UtcNow;
+
+        var updatedWorkLog = await _workLogRepository.UpdateAsync(existingWorkLog);
+
+        return MapToResponse(updatedWorkLog);
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> DeleteAsync(int id)
+    {
+        if (id <= 0)
+        {
+            throw new ArgumentException("WorkLog id is required.", nameof(id));
+        }
+
+        var existingWorkLog = await _workLogRepository.GetByIdAsync(id);
+
+        if (existingWorkLog is null)
+        {
+            return false;
+        }
+
+        await _workLogRepository.DeleteAsync(existingWorkLog);
+
+        return true;
+    }
+
+
+    /// <inheritdoc/>
     public async Task<WorkLogResponse?> GetByIdAsync(int id)
     {
         var workLog = await _workLogRepository.GetByIdAsync(id);

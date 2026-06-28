@@ -33,6 +33,24 @@ public class WorkLogRepository : IWorkLogRepository
     }
 
     /// <inheritdoc/>
+    public async Task<WorkLog> UpdateAsync(WorkLog workLog)
+    {
+        _context.WorkLogs.Update(workLog);
+
+        await _context.SaveChangesAsync();
+
+        return workLog;
+    }
+
+    /// <inheritdoc/>
+    public async Task DeleteAsync(WorkLog workLog)
+    {
+        _context.WorkLogs.Remove(workLog);
+
+        await _context.SaveChangesAsync();
+    }
+
+    /// <inheritdoc/>
     public async Task<WorkLog?> GetByIdAsync(int id)
     {
         return await _context.WorkLogs

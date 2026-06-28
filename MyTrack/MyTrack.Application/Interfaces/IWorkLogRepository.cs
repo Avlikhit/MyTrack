@@ -13,6 +13,20 @@ public interface IWorkLogRepository
     Task<WorkLog> AddAsync(WorkLog workLog);
 
     /// <summary>
+    /// Updates an existing work log.
+    /// </summary>
+    /// <param name="workLog">The work log to update.</param>
+    /// <returns>The updated work log.</returns>
+    Task<WorkLog> UpdateAsync(WorkLog workLog);
+
+    /// <summary>
+    /// Deletes an existing work log.
+    /// </summary>
+    /// <param name="workLog">The work log to delete.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task DeleteAsync(WorkLog workLog);
+
+    /// <summary>
     /// Gets a work log by id.
     /// </summary>
     Task<WorkLog?> GetByIdAsync(int id);

@@ -66,6 +66,99 @@ public class WorkLogsController : ControllerBase
     }
 
     /// <summary>
+    /// Updates an existing work log.
+    /// </summary>
+    /// <param name="id">The work log identifier.</param>
+    /// <param name="request">The work log update request.</param>
+    /// <returns>The updated work log.</returns>
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(typeof(WorkLogResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<WorkLogResponse>> UpdateAsync(int id, UpdateWorkLogRequest request)
+    {
+        try
+        {
+            var response = await _workLogService.UpdateAsync(id, request);
+
+            if (response is null)
+            {
+                return NotFound(new
+                {
+                    message = $"Work log with id {id} was not found."
+                });
+            }
+
+            return Ok(response);
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, "Invalid request while updating work log with id {WorkLogId}.", id);
+
+            return BadRequest(new
+            {
+                message = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while updating work log with id {WorkLogId}.", id);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                message = "An unexpected error occurred while updating the work log."
+            });
+        }
+    }
+
+    /// <summary>
+    /// Deletes an existing work log.
+    /// </summary>
+    /// <param name="id">The work log identifier.</param>
+    /// <returns>No content if deleted successfully.</returns>
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        try
+        {
+            var isDeleted = await _workLogService.DeleteAsync(id);
+
+            if (!isDeleted)
+            {
+                return NotFound(new
+                {
+                    message = $"Work log with id {id} was not found."
+                });
+            }
+
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, "Invalid request while deleting work log with id {WorkLogId}.", id);
+
+            return BadRequest(new
+            {
+                message = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while deleting work log with id {WorkLogId}.", id);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                message = "An unexpected error occurred while deleting the work log."
+            });
+        }
+    }
+
+    /// <summary>
     /// Gets a work log by its unique identifier.
     /// </summary>
     /// <param name="id">The work log identifier.</param>
