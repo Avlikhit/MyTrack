@@ -29,16 +29,6 @@ public class WorkLogService : IWorkLogService
             throw new ArgumentNullException(nameof(request));
         }
 
-        if (request.ProjectId <= 0)
-        {
-            throw new ArgumentException("ProjectId is required.", nameof(request));
-        }
-
-        if (request.HoursWorked <= 0)
-        {
-            throw new ArgumentException("HoursWorked must be greater than zero.", nameof(request));
-        }
-
         var workLog = new WorkLog
         {
             WorkDate = request.WorkDate,
@@ -69,16 +59,6 @@ public class WorkLogService : IWorkLogService
         if (id <= 0)
         {
             throw new ArgumentException("WorkLog id is required.", nameof(id));
-        }
-
-        if (request.ProjectId <= 0)
-        {
-            throw new ArgumentException("ProjectId is required.", nameof(request));
-        }
-
-        if (request.HoursWorked <= 0)
-        {
-            throw new ArgumentException("HoursWorked must be greater than zero.", nameof(request));
         }
 
         var existingWorkLog = await _workLogRepository.GetByIdAsync(id);

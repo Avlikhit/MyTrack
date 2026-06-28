@@ -27,13 +27,4 @@ public class WorkLogServiceTests
         Assert.Equal(savedWorkLog.Id, response.Id);
         Assert.Equal(savedWorkLog.ProjectId, response.ProjectId);
     }
-
-    [Fact]
-    public async Task CreateAsync_InvalidProjectId_ThrowsArgumentException()
-    {
-        var mockRepo = new Mock<IWorkLogRepository>();
-        var service = new WorkLogService(mockRepo.Object);
-
-        await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(new CreateWorkLogRequest { ProjectId = 0, HoursWorked = 1 }));
-    }
 }

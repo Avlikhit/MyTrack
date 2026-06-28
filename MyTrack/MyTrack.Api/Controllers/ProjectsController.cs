@@ -35,27 +35,9 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ProjectResponse>> CreateAsync(CreateProjectRequest request)
     {
-        try
-        {
-            var response = await _projectService.CreateAsync(request);
+        var response = await _projectService.CreateAsync(request);
 
-            return Created($"/api/projects/{response.Id}", response);
-        }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Invalid request while creating project.");
-
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while creating project.");
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while creating the project."
-            });
-        }
+        return Created($"/api/projects/{response.Id}", response);
     }
 
     /// <summary>
@@ -67,26 +49,14 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ProjectResponse>> GetByIdAsync(int id)
     {
-        try
+        var response = await _projectService.GetByIdAsync(id);
+
+        if (response is null)
         {
-            var response = await _projectService.GetByIdAsync(id);
-
-            if (response is null)
-            {
-                return NotFound(new { message = $"Project with id {id} was not found." });
-            }
-
-            return Ok(response);
+            return NotFound(new { message = $"Project with id {id} was not found." });
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while getting project with id {ProjectId}.", id);
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while retrieving the project."
-            });
-        }
+        return Ok(response);
     }
 
     /// <summary>
@@ -97,21 +67,9 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetAllAsync()
     {
-        try
-        {
-            var response = await _projectService.GetAllAsync();
+        var response = await _projectService.GetAllAsync();
 
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while getting all projects.");
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while retrieving projects."
-            });
-        }
+        return Ok(response);
     }
 
     /// <summary>
@@ -122,21 +80,9 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetActiveAsync()
     {
-        try
-        {
-            var response = await _projectService.GetActiveAsync();
+        var response = await _projectService.GetActiveAsync();
 
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while getting active projects.");
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while retrieving active projects."
-            });
-        }
+        return Ok(response);
     }
 
     /// <summary>
@@ -149,32 +95,14 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ProjectResponse>> UpdateAsync(int id, UpdateProjectRequest request)
     {
-        try
+        var response = await _projectService.UpdateAsync(id, request);
+
+        if (response is null)
         {
-            var response = await _projectService.UpdateAsync(id, request);
-
-            if (response is null)
-            {
-                return NotFound(new { message = $"Project with id {id} was not found." });
-            }
-
-            return Ok(response);
+            return NotFound(new { message = $"Project with id {id} was not found." });
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Invalid request while updating project with id {ProjectId}.", id);
 
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while updating project with id {ProjectId}.", id);
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while updating the project."
-            });
-        }
+        return Ok(response);
     }
 
     /// <summary>
@@ -187,31 +115,13 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        try
+        var isDeleted = await _projectService.DeleteAsync(id);
+
+        if (!isDeleted)
         {
-            var isDeleted = await _projectService.DeleteAsync(id);
-
-            if (!isDeleted)
-            {
-                return NotFound(new { message = $"Project with id {id} was not found." });
-            }
-
-            return NoContent();
+            return NotFound(new { message = $"Project with id {id} was not found." });
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Invalid request while deleting project with id {ProjectId}.", id);
 
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while deleting project with id {ProjectId}.", id);
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while deleting the project."
-            });
-        }
+        return NoContent();
     }
 }

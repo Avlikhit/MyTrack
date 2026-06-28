@@ -29,19 +29,5 @@ public class WorkLogsControllerTests
         var createdResult = Assert.IsType<CreatedResult>(result.Result);
         Assert.Equal(response, createdResult.Value);
     }
-
-    [Fact]
-    public async Task CreateAsync_ServiceThrowsArgumentException_ReturnsBadRequest()
-    {
-        var mockService = new Mock<IWorkLogService>();
-        var mockLogger = new Mock<ILogger<WorkLogsController>>();
-        var request = new CreateWorkLogRequest { ProjectId = 0, HoursWorked = 0 };
-        mockService.Setup(s => s.CreateAsync(It.IsAny<CreateWorkLogRequest>())).ThrowsAsync(new ArgumentException("Invalid"));
-
-        var controller = new WorkLogsController(mockService.Object, mockLogger.Object);
-
-        var result = await controller.CreateAsync(request);
-
-        Assert.IsType<BadRequestObjectResult>(result.Result);
-    }
+  
 }

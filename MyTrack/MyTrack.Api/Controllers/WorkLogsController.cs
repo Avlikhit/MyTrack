@@ -39,30 +39,9 @@ public class WorkLogsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<WorkLogResponse>> CreateAsync(CreateWorkLogRequest request)
     {
-        try
-        {
-            var response = await _workLogService.CreateAsync(request);
+        var response = await _workLogService.CreateAsync(request);
 
-            return Created($"/api/worklogs/{response.Id}", response);
-        }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Invalid request while creating work log.");
-
-            return BadRequest(new
-            {
-                message = ex.Message
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while creating work log.");
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while creating the work log."
-            });
-        }
+        return Created($"/api/worklogs/{response.Id}", response);
     }
 
     /// <summary>
@@ -78,38 +57,17 @@ public class WorkLogsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<WorkLogResponse>> UpdateAsync(int id, UpdateWorkLogRequest request)
     {
-        try
+        var response = await _workLogService.UpdateAsync(id, request);
+
+        if (response is null)
         {
-            var response = await _workLogService.UpdateAsync(id, request);
-
-            if (response is null)
+            return NotFound(new
             {
-                return NotFound(new
-                {
-                    message = $"Work log with id {id} was not found."
-                });
-            }
-
-            return Ok(response);
-        }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Invalid request while updating work log with id {WorkLogId}.", id);
-
-            return BadRequest(new
-            {
-                message = ex.Message
+                message = $"Work log with id {id} was not found."
             });
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while updating work log with id {WorkLogId}.", id);
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while updating the work log."
-            });
-        }
+        return Ok(response);
     }
 
     /// <summary>
@@ -124,38 +82,18 @@ public class WorkLogsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        try
+        var isDeleted = await _workLogService.DeleteAsync(id);
+
+        if (!isDeleted)
         {
-            var isDeleted = await _workLogService.DeleteAsync(id);
-
-            if (!isDeleted)
+            return NotFound(new
             {
-                return NotFound(new
-                {
-                    message = $"Work log with id {id} was not found."
-                });
-            }
-
-            return NoContent();
-        }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Invalid request while deleting work log with id {WorkLogId}.", id);
-
-            return BadRequest(new
-            {
-                message = ex.Message
+                message = $"Work log with id {id} was not found."
             });
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while deleting work log with id {WorkLogId}.", id);
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while deleting the work log."
-            });
-        }
+        return NoContent();
+
     }
 
     /// <summary>
@@ -169,29 +107,18 @@ public class WorkLogsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<WorkLogResponse>> GetByIdAsync(int id)
     {
-        try
+        var response = await _workLogService.GetByIdAsync(id);
+
+        if (response is null)
         {
-            var response = await _workLogService.GetByIdAsync(id);
-
-            if (response is null)
+            return NotFound(new
             {
-                return NotFound(new
-                {
-                    message = $"Work log with id {id} was not found."
-                });
-            }
-
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while getting work log with id {WorkLogId}.", id);
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while retrieving the work log."
+                message = $"Work log with id {id} was not found."
             });
         }
+
+        return Ok(response);
+
     }
 
     /// <summary>
@@ -204,21 +131,11 @@ public class WorkLogsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<WorkLogResponse>>> GetByDateAsync(DateOnly workDate)
     {
-        try
-        {
-            var response = await _workLogService.GetByDateAsync(workDate);
 
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error occurred while getting work logs for date {WorkDate}.", workDate);
+        var response = await _workLogService.GetByDateAsync(workDate);
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while retrieving work logs by date."
-            });
-        }
+        return Ok(response);
+
     }
 
     /// <summary>
@@ -235,32 +152,18 @@ public class WorkLogsController : ControllerBase
         [FromQuery] DateOnly startDate,
         [FromQuery] DateOnly endDate)
     {
-        try
+
+        if (startDate > endDate)
         {
-            if (startDate > endDate)
+            return BadRequest(new
             {
-                return BadRequest(new
-                {
-                    message = "Start date cannot be greater than end date."
-                });
-            }
-
-            var response = await _workLogService.GetByDateRangeAsync(startDate, endDate);
-
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(
-                ex,
-                "Unexpected error occurred while getting work logs from {StartDate} to {EndDate}.",
-                startDate,
-                endDate);
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                message = "An unexpected error occurred while retrieving work logs by date range."
+                message = "Start date cannot be greater than end date."
             });
         }
+
+        var response = await _workLogService.GetByDateRangeAsync(startDate, endDate);
+
+        return Ok(response);
+
     }
 }

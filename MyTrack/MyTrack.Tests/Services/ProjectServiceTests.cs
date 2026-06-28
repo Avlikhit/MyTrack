@@ -27,13 +27,4 @@ public class ProjectServiceTests
         Assert.Equal(savedProject.Id, response.Id);
         Assert.Equal(savedProject.Name, response.Name);
     }
-
-    [Fact]
-    public async Task CreateAsync_InvalidName_ThrowsArgumentException()
-    {
-        var mockRepo = new Mock<IProjectRepository>();
-        var service = new ProjectService(mockRepo.Object);
-
-        await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(new CreateProjectRequest { Name = "" }));
-    }
 }

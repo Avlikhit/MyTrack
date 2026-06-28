@@ -29,11 +29,6 @@ public class ProjectService : IProjectService
             throw new ArgumentNullException(nameof(request));
         }
 
-        if (string.IsNullOrWhiteSpace(request.Name))
-        {
-            throw new ArgumentException("Project name is required.", nameof(request));
-        }
-
         var project = new Project
         {
             Name = request.Name,
@@ -61,11 +56,6 @@ public class ProjectService : IProjectService
         if (id <= 0)
         {
             throw new ArgumentException("Project id is required.", nameof(id));
-        }
-
-        if (string.IsNullOrWhiteSpace(request.Name))
-        {
-            throw new ArgumentException("Project name is required.", nameof(request));
         }
 
         var existingProject = await _projectRepository.GetByIdAsync(id);

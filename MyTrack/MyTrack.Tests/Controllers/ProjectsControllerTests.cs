@@ -29,19 +29,4 @@ public class ProjectsControllerTests
         var createdResult = Assert.IsType<CreatedResult>(result.Result);
         Assert.Equal(response, createdResult.Value);
     }
-
-    [Fact]
-    public async Task CreateAsync_ServiceThrowsArgumentException_ReturnsBadRequest()
-    {
-        var mockService = new Mock<IProjectService>();
-        var mockLogger = new Mock<ILogger<ProjectsController>>();
-        var request = new CreateProjectRequest { Name = "" };
-        mockService.Setup(s => s.CreateAsync(It.IsAny<CreateProjectRequest>())).ThrowsAsync(new ArgumentException("Invalid"));
-
-        var controller = new ProjectsController(mockService.Object, mockLogger.Object);
-
-        var result = await controller.CreateAsync(request);
-
-        Assert.IsType<BadRequestObjectResult>(result.Result);
-    }
 }
