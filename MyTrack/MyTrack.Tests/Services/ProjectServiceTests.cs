@@ -15,11 +15,15 @@ public class ProjectServiceTests
     public async Task CreateAsync_CallsRepositoryAndReturnsResponse()
     {
         var mockRepo = new Mock<IProjectRepository>();
+        var mockCurrentUser = new Mock<ICurrentUserService>();
+        mockCurrentUser.SetupGet(c => c.UserId).Returns(42);
+        mockCurrentUser.SetupGet(c => c.Email).Returns("test@example.com");
+
         var request = new CreateProjectRequest { Name = "Test" };
         var savedProject = new Project { Id = 1, Name = "Test" };
         mockRepo.Setup(r => r.AddAsync(It.IsAny<Project>())).ReturnsAsync(savedProject);
 
-        var service = new ProjectService(mockRepo.Object);
+        var service = new ProjectService(mockRepo.Object, mockCurrentUser.Object);
 
         var response = await service.CreateAsync(request);
 

@@ -11,14 +11,19 @@ namespace MyTrack.Application.Services;
 public class ProjectService : IProjectService
 {
     private readonly IProjectRepository _projectRepository;
+    private readonly ICurrentUserService _currentUserService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProjectService"/> class.
     /// </summary>
     /// <param name="projectRepository">The project repository.</param>
-    public ProjectService(IProjectRepository projectRepository)
+    /// <param name="currentUserService">The current user service.</param>
+    public ProjectService(
+        IProjectRepository projectRepository,
+        ICurrentUserService currentUserService)
     {
         _projectRepository = projectRepository;
+        _currentUserService = currentUserService;
     }
 
     /// <inheritdoc/>
@@ -31,6 +36,7 @@ public class ProjectService : IProjectService
 
         var project = new Project
         {
+            UserId = _currentUserService.UserId,
             Name = request.Name,
             Description = request.Description,
             ColorCode = request.ColorCode,
@@ -58,7 +64,9 @@ public class ProjectService : IProjectService
             throw new ArgumentException("Project id is required.", nameof(id));
         }
 
-        var existingProject = await _projectRepository.GetByIdAsync(id);
+        var existingProject = await _projectRepository.GetByIdAsync(
+            id,
+            _currentUserService.UserId);
 
         if (existingProject is null)
         {
@@ -81,7 +89,9 @@ public class ProjectService : IProjectService
     /// <inheritdoc/>
     public async Task<ProjectResponse?> GetByIdAsync(int id)
     {
-        var project = await _projectRepository.GetByIdAsync(id);
+        var project = await _projectRepository.GetByIdAsync(
+            id,
+            _currentUserService.UserId);
 
         return project is null ? null : MapToResponse(project);
     }
@@ -89,7 +99,8 @@ public class ProjectService : IProjectService
     /// <inheritdoc/>
     public async Task<IEnumerable<ProjectResponse>> GetAllAsync()
     {
-        var projects = await _projectRepository.GetAllAsync();
+        var projects = await _projectRepository.GetAllAsync(
+            _currentUserService.UserId);
 
         return projects.Select(MapToResponse);
     }
@@ -97,7 +108,8 @@ public class ProjectService : IProjectService
     /// <inheritdoc/>
     public async Task<IEnumerable<ProjectResponse>> GetActiveAsync()
     {
-        var projects = await _projectRepository.GetActiveAsync();
+        var projects = await _projectRepository.GetActiveAsync(
+            _currentUserService.UserId);
 
         return projects.Select(MapToResponse);
     }
@@ -110,7 +122,9 @@ public class ProjectService : IProjectService
             throw new ArgumentException("Project id is required.", nameof(id));
         }
 
-        var existingProject = await _projectRepository.GetByIdAsync(id);
+        var existingProject = await _projectRepository.GetByIdAsync(
+            id,
+            _currentUserService.UserId);
 
         if (existingProject is null)
         {

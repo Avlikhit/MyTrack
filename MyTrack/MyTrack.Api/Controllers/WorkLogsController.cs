@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyTrack.Application.Interfaces;
 using MyTrack.Contracts.Requests;
@@ -8,6 +9,7 @@ namespace MyTrack.Api.Controllers;
 /// <summary>
 /// Handles API requests related to work logs.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class WorkLogsController : ControllerBase

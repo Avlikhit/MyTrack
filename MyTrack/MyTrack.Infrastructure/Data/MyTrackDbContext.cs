@@ -26,4 +26,39 @@ public class MyTrackDbContext : DbContext
     /// Gets or sets the work logs table.
     /// </summary>
     public DbSet<WorkLog> WorkLogs { get; set; }
+
+    /// <summary>
+    /// Gets or sets the users table.
+    /// </summary>
+    public DbSet<User> Users { get; set; }
+
+    /// <summary>
+    /// Configures entity relationships.
+    /// </summary>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Project>()
+            .HasOne(p => p.User)
+            .WithMany(u => u.Projects)
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<WorkLog>()
+            .HasOne(w => w.User)
+            .WithMany(u => u.WorkLogs)
+            .HasForeignKey(w => w.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<WorkLog>()
+            .HasOne(w => w.Project)
+            .WithMany(p => p.WorkLogs)
+            .HasForeignKey(w => w.ProjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<WorkLog>()
+            .Property(w => w.HoursWorked)
+            .HasPrecision(5, 2);
+    }
 }

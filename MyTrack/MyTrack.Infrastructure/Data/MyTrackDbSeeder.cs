@@ -1,4 +1,5 @@
-﻿using MyTrack.Domain.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using MyTrack.Domain.Entities;
 
 namespace MyTrack.Infrastructure.Data;
 
@@ -7,19 +8,36 @@ namespace MyTrack.Infrastructure.Data;
 /// </summary>
 public static class MyTrackDbSeeder
 {
-    /// <summary>
-    /// Seeds initial development data if it does not already exist.
-    /// </summary>
-    /// <param name="context">The database context.</param>
     public static async Task SeedAsync(MyTrackDbContext context)
     {
+        var user = context.Users.FirstOrDefault(x => x.Email == "testuser@example.com");
+
+        if (user is null)
+        {
+            user = new User
+            {
+                FirstName = "Test",
+                LastName = "User",
+                Email = "testuser@example.com",
+                IsActive = true,
+                CreatedDateTime = DateTime.UtcNow
+            };
+
+            var passwordHasher = new PasswordHasher<User>();
+            user.PasswordHash = passwordHasher.HashPassword(user, "Password123!");
+
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
+        }
+
         var personalProject = context.Projects
-            .FirstOrDefault(x => x.Name == "Personal Portfolio");
+            .FirstOrDefault(x => x.Name == "Personal Portfolio" && x.UserId == user.Id);
 
         if (personalProject is null)
         {
             personalProject = new Project
             {
+                UserId = user.Id,
                 Name = "Personal Portfolio",
                 Description = "Sample personal website project.",
                 ColorCode = "#2563EB",
@@ -34,12 +52,13 @@ public static class MyTrackDbSeeder
         }
 
         var learningProject = context.Projects
-            .FirstOrDefault(x => x.Name == "Learning Project");
+            .FirstOrDefault(x => x.Name == "Learning Project" && x.UserId == user.Id);
 
         if (learningProject is null)
         {
             learningProject = new Project
             {
+                UserId = user.Id,
                 Name = "Learning Project",
                 Description = "Sample project used for learning and testing.",
                 ColorCode = "#10B981",
@@ -53,47 +72,36 @@ public static class MyTrackDbSeeder
             await context.SaveChangesAsync();
         }
 
-        if (!context.WorkLogs.Any())
+        if (!context.WorkLogs.Any(x => x.UserId == user.Id))
         {
             var workLogs = new List<WorkLog>
             {
                 new()
                 {
-                    WorkDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-4)),
+                    UserId = user.Id,
                     ProjectId = personalProject.Id,
+                    WorkDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-2)),
                     TicketNumber = "SAMPLE-001",
                     TaskType = "Planning",
-                    Description = "Created initial project plan and outlined core features.",
+                    Description = "Created sample project plan.",
                     HoursWorked = 2,
                     Blockers = "None",
-                    Learnings = "Learned how to define project requirements.",
-                    NextSteps = "Create initial backend structure.",
+                    Learnings = "Learned project planning.",
+                    NextSteps = "Continue backend development.",
                     CreatedDateTime = DateTime.UtcNow
                 },
                 new()
                 {
-                    WorkDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-3)),
+                    UserId = user.Id,
                     ProjectId = learningProject.Id,
+                    WorkDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-1)),
                     TicketNumber = "SAMPLE-002",
                     TaskType = "Development",
-                    Description = "Created backend API structure and configured Swagger.",
+                    Description = "Tested API endpoints using seeded data.",
                     HoursWorked = 2.5m,
                     Blockers = "None",
-                    Learnings = "Learned how API endpoints are organized.",
-                    NextSteps = "Add database support.",
-                    CreatedDateTime = DateTime.UtcNow
-                },
-                new()
-                {
-                    WorkDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-2)),
-                    ProjectId = learningProject.Id,
-                    TicketNumber = "SAMPLE-003",
-                    TaskType = "Testing",
-                    Description = "Tested API endpoints using sample data.",
-                    HoursWorked = 1.5m,
-                    Blockers = "None",
-                    Learnings = "Learned how to verify API responses.",
-                    NextSteps = "Improve validation and logging.",
+                    Learnings = "Learned seeded test data.",
+                    NextSteps = "Test user-specific filtering.",
                     CreatedDateTime = DateTime.UtcNow
                 }
             };

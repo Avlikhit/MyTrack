@@ -47,19 +47,27 @@ public class ProjectRepository : IProjectRepository
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Project>> GetAllAsync()
+    public async Task<Project?> GetByIdAsync(int id, int userId)
     {
         return await _context.Projects
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<Project>> GetAllAsync(int userId)
+    {
+        return await _context.Projects
+            .Where(x => x.UserId == userId)
             .OrderBy(x => x.DisplayOrder)
             .ThenBy(x => x.Name)
             .ToListAsync();
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Project>> GetActiveAsync()
+    public async Task<IEnumerable<Project>> GetActiveAsync(int userId)
     {
         return await _context.Projects
-            .Where(x => x.IsActive)
+            .Where(x => x.UserId == userId && x.IsActive)
             .OrderBy(x => x.DisplayOrder)
             .ThenBy(x => x.Name)
             .ToListAsync();

@@ -11,14 +11,22 @@ namespace MyTrack.Application.Services;
 public class WorkLogService : IWorkLogService
 {
     private readonly IWorkLogRepository _workLogRepository;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IProjectRepository _projectRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WorkLogService"/> class.
     /// </summary>
     /// <param name="workLogRepository">The work log repository.</param>
-    public WorkLogService(IWorkLogRepository workLogRepository)
+    /// <param name="currentUserService">The current user service.</param>
+    public WorkLogService(
+        IWorkLogRepository workLogRepository,
+        ICurrentUserService currentUserService,
+        IProjectRepository projectRepository)
     {
         _workLogRepository = workLogRepository;
+        _currentUserService = currentUserService;
+        _projectRepository = projectRepository;
     }
 
     /// <inheritdoc/>
@@ -31,6 +39,7 @@ public class WorkLogService : IWorkLogService
 
         var workLog = new WorkLog
         {
+            UserId = _currentUserService.UserId,
             WorkDate = request.WorkDate,
             ProjectId = request.ProjectId,
             TicketNumber = request.TicketNumber,
@@ -42,6 +51,14 @@ public class WorkLogService : IWorkLogService
             NextSteps = request.NextSteps,
             CreatedDateTime = DateTime.UtcNow
         };
+
+
+        var project = await _projectRepository.GetByIdAsync(request.ProjectId, _currentUserService.UserId);
+
+        if (project is null)
+        {
+            throw new ArgumentException("Selected project does not exist or does not belong to the current user.");
+        }
 
         var savedWorkLog = await _workLogRepository.AddAsync(workLog);
 
@@ -61,7 +78,9 @@ public class WorkLogService : IWorkLogService
             throw new ArgumentException("WorkLog id is required.", nameof(id));
         }
 
-        var existingWorkLog = await _workLogRepository.GetByIdAsync(id);
+        var existingWorkLog = await _workLogRepository.GetByIdAsync(
+            id,
+            _currentUserService.UserId);
 
         if (existingWorkLog is null)
         {
@@ -79,6 +98,15 @@ public class WorkLogService : IWorkLogService
         existingWorkLog.NextSteps = request.NextSteps;
         existingWorkLog.ModifiedDateTime = DateTime.UtcNow;
 
+        var project = await _projectRepository.GetByIdAsync(
+    request.ProjectId,
+    _currentUserService.UserId);
+
+        if (project is null)
+        {
+            throw new ArgumentException("Selected project does not exist or does not belong to the current user.");
+        }
+
         var updatedWorkLog = await _workLogRepository.UpdateAsync(existingWorkLog);
 
         return MapToResponse(updatedWorkLog);
@@ -92,7 +120,9 @@ public class WorkLogService : IWorkLogService
             throw new ArgumentException("WorkLog id is required.", nameof(id));
         }
 
-        var existingWorkLog = await _workLogRepository.GetByIdAsync(id);
+        var existingWorkLog = await _workLogRepository.GetByIdAsync(
+            id,
+            _currentUserService.UserId);
 
         if (existingWorkLog is null)
         {
@@ -104,11 +134,12 @@ public class WorkLogService : IWorkLogService
         return true;
     }
 
-
     /// <inheritdoc/>
     public async Task<WorkLogResponse?> GetByIdAsync(int id)
     {
-        var workLog = await _workLogRepository.GetByIdAsync(id);
+        var workLog = await _workLogRepository.GetByIdAsync(
+            id,
+            _currentUserService.UserId);
 
         return workLog is null ? null : MapToResponse(workLog);
     }
@@ -116,7 +147,9 @@ public class WorkLogService : IWorkLogService
     /// <inheritdoc/>
     public async Task<IEnumerable<WorkLogResponse>> GetByDateAsync(DateOnly workDate)
     {
-        var workLogs = await _workLogRepository.GetByDateAsync(workDate);
+        var workLogs = await _workLogRepository.GetByDateAsync(
+            workDate,
+            _currentUserService.UserId);
 
         return workLogs.Select(MapToResponse);
     }
@@ -124,7 +157,10 @@ public class WorkLogService : IWorkLogService
     /// <inheritdoc/>
     public async Task<IEnumerable<WorkLogResponse>> GetByDateRangeAsync(DateOnly startDate, DateOnly endDate)
     {
-        var workLogs = await _workLogRepository.GetByDateRangeAsync(startDate, endDate);
+        var workLogs = await _workLogRepository.GetByDateRangeAsync(
+            startDate,
+            endDate,
+            _currentUserService.UserId);
 
         return workLogs.Select(MapToResponse);
     }
@@ -132,6 +168,8 @@ public class WorkLogService : IWorkLogService
     /// <summary>
     /// Maps a WorkLog domain entity to a WorkLogResponse contract.
     /// </summary>
+    /// <param name="workLog">The work log entity.</param>
+    /// <returns>The work log response.</returns>
     private static WorkLogResponse MapToResponse(WorkLog workLog)
     {
         return new WorkLogResponse

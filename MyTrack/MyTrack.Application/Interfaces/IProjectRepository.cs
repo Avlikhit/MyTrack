@@ -23,14 +23,19 @@ public interface IProjectRepository
     Task<Project?> GetByIdAsync(int id);
 
     /// <summary>
+    /// Gets a project by id and user id.
+    /// </summary>
+    Task<Project?> GetByIdAsync(int id, int userId);
+
+    /// <summary>
     /// Gets all projects.
     /// </summary>
-    Task<IEnumerable<Project>> GetAllAsync();
+    Task<IEnumerable<Project>> GetAllAsync(int userId);
 
     /// <summary>
     /// Gets all active projects.
     /// </summary>
-    Task<IEnumerable<Project>> GetActiveAsync();
+    Task<IEnumerable<Project>> GetActiveAsync(int userId);
 
     /// <summary>
     /// Deletes an existing project.

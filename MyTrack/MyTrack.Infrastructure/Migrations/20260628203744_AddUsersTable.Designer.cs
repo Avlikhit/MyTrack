@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyTrack.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using MyTrack.Infrastructure.Data;
 namespace MyTrack.Infrastructure.Migrations
 {
     [DbContext(typeof(MyTrackDbContext))]
-    partial class MyTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260628203744_AddUsersTable")]
+    partial class AddUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,12 +58,7 @@ namespace MyTrack.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Projects");
                 });
@@ -122,8 +120,7 @@ namespace MyTrack.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("HoursWorked")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Learnings")
                         .HasColumnType("nvarchar(max)");
@@ -148,9 +145,6 @@ namespace MyTrack.Infrastructure.Migrations
                     b.Property<string>("TicketNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly>("WorkDate")
                         .HasColumnType("date");
 
@@ -158,20 +152,7 @@ namespace MyTrack.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("WorkLogs");
-                });
-
-            modelBuilder.Entity("MyTrack.Domain.Entities.Project", b =>
-                {
-                    b.HasOne("MyTrack.Domain.Entities.User", "User")
-                        .WithMany("Projects")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyTrack.Domain.Entities.WorkLog", b =>
@@ -179,29 +160,14 @@ namespace MyTrack.Infrastructure.Migrations
                     b.HasOne("MyTrack.Domain.Entities.Project", "Project")
                         .WithMany("WorkLogs")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyTrack.Domain.Entities.User", "User")
-                        .WithMany("WorkLogs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Project");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyTrack.Domain.Entities.Project", b =>
                 {
-                    b.Navigation("WorkLogs");
-                });
-
-            modelBuilder.Entity("MyTrack.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Projects");
-
                     b.Navigation("WorkLogs");
                 });
 #pragma warning restore 612, 618

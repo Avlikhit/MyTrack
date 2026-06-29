@@ -15,15 +15,11 @@ public interface IWorkLogRepository
     /// <summary>
     /// Updates an existing work log.
     /// </summary>
-    /// <param name="workLog">The work log to update.</param>
-    /// <returns>The updated work log.</returns>
     Task<WorkLog> UpdateAsync(WorkLog workLog);
 
     /// <summary>
     /// Deletes an existing work log.
     /// </summary>
-    /// <param name="workLog">The work log to delete.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
     Task DeleteAsync(WorkLog workLog);
 
     /// <summary>
@@ -32,12 +28,27 @@ public interface IWorkLogRepository
     Task<WorkLog?> GetByIdAsync(int id);
 
     /// <summary>
+    /// Gets a work log by id for a specific user.
+    /// </summary>
+    Task<WorkLog?> GetByIdAsync(int id, int userId);
+
+    /// <summary>
     /// Gets work logs for a specific date.
     /// </summary>
     Task<IEnumerable<WorkLog>> GetByDateAsync(DateOnly workDate);
 
     /// <summary>
+    /// Gets work logs for a specific date and user.
+    /// </summary>
+    Task<IEnumerable<WorkLog>> GetByDateAsync(DateOnly workDate, int userId);
+
+    /// <summary>
     /// Gets work logs between two dates.
     /// </summary>
     Task<IEnumerable<WorkLog>> GetByDateRangeAsync(DateOnly startDate, DateOnly endDate);
+
+    /// <summary>
+    /// Gets work logs between two dates for a specific user.
+    /// </summary>
+    Task<IEnumerable<WorkLog>> GetByDateRangeAsync(DateOnly startDate, DateOnly endDate, int userId);
 }

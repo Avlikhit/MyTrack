@@ -60,4 +60,14 @@ public class Project
     /// Gets or sets a value indicating whether this project is the default selected project.
     /// </summary>
     public bool IsDefault { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user identifier that owns this project.
+    /// </summary>
+    public int UserId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user that owns this project.
+    /// </summary>
+    public User? User { get; set; }
 }

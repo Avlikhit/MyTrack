@@ -15,11 +15,20 @@ public class WorkLogServiceTests
     public async Task CreateAsync_CallsRepositoryAndReturnsResponse()
     {
         var mockRepo = new Mock<IWorkLogRepository>();
+        var mockProjectRepo = new Mock<IProjectRepository>();
+        var mockCurrentUser = new Mock<ICurrentUserService>();
+
+        mockCurrentUser.SetupGet(c => c.UserId).Returns(42);
+        mockCurrentUser.SetupGet(c => c.Email).Returns("test@example.com");
+
         var request = new CreateWorkLogRequest { ProjectId = 1, HoursWorked = 2 };
         var savedWorkLog = new WorkLog { Id = 1, ProjectId = 1, HoursWorked = 2 };
-        mockRepo.Setup(r => r.AddAsync(It.IsAny<WorkLog>())).ReturnsAsync(savedWorkLog);
+        var project = new Project { Id = 1, Name = "Test" };
 
-        var service = new WorkLogService(mockRepo.Object);
+        mockRepo.Setup(r => r.AddAsync(It.IsAny<WorkLog>())).ReturnsAsync(savedWorkLog);
+        mockProjectRepo.Setup(r => r.GetByIdAsync(request.ProjectId, mockCurrentUser.Object.UserId)).ReturnsAsync(project);
+
+        var service = new WorkLogService(mockRepo.Object, mockCurrentUser.Object, mockProjectRepo.Object);
 
         var response = await service.CreateAsync(request);
 

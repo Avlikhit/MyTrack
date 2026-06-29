@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyTrack.Application.Interfaces;
 using MyTrack.Contracts.Requests;
 using MyTrack.Contracts.Responses;
@@ -8,6 +9,7 @@ namespace MyTrack.Api.Controllers;
 /// <summary>
 /// Handles API requests related to projects.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase

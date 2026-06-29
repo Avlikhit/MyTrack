@@ -88,4 +88,14 @@ public class WorkLog
     /// Gets or sets the project associated with this work log.
     /// </summary>
     public Project? Project { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user identifier that owns this work log.
+    /// </summary>
+    public int UserId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user that owns this work log.
+    /// </summary>
+    public User? User { get; set; }
 }

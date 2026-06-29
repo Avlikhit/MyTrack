@@ -58,6 +58,46 @@ public class WorkLogRepository : IWorkLogRepository
     }
 
     /// <inheritdoc/>
+    public async Task<WorkLog?> GetByIdAsync(int id, int userId)
+    {
+        return await _context.WorkLogs
+            .Include(w => w.Project)
+            .FirstOrDefaultAsync(w =>
+                w.Id == id &&
+                w.UserId == userId);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<WorkLog>> GetByDateRangeAsync(
+        DateOnly startDate,
+        DateOnly endDate,
+        int userId)
+    {
+        return await _context.WorkLogs
+            .Include(w => w.Project)
+            .Where(w =>
+                w.WorkDate >= startDate &&
+                w.WorkDate <= endDate &&
+                w.UserId == userId)
+            .OrderByDescending(w => w.WorkDate)
+            .ToListAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<WorkLog>> GetByDateAsync(
+        DateOnly workDate,
+        int userId)
+    {
+        return await _context.WorkLogs
+            .Include(w => w.Project)
+            .Where(w =>
+                w.WorkDate == workDate &&
+                w.UserId == userId)
+            .OrderByDescending(w => w.WorkDate)
+            .ToListAsync();
+    }
+
+    /// <inheritdoc/>
     public async Task<IEnumerable<WorkLog>> GetByDateAsync(DateOnly workDate)
     {
         return await _context.WorkLogs
