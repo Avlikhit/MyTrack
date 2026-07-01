@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
@@ -22,15 +23,18 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: Dashboard
+    component: Dashboard,
+    canActivate: [authGuard]
   },
   {
     path: 'projects',
-    component: Projects
+    component: Projects,
+    canActivate: [authGuard]
   },
   {
     path: 'worklogs',
-    component: Worklogs
+    component: Worklogs,
+    canActivate: [authGuard]
   },
   {
     path: '**',

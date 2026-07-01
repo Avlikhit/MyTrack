@@ -1,4 +1,28 @@
-<div class="container mt-5">
-  <h1>MyTrack Login</h1>
-  <p>Login page is working.</p>
+<div class="login-page">
+  <mat-card class="login-card">
+    <h1>MyTrack</h1>
+    <p class="subtitle">Sign in to continue</p>
+
+    <form>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" name="email" [(ngModel)]="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" name="password" [(ngModel)]="password" />
+      </mat-form-field>
+
+      <p class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <button mat-flat-button color="primary" class="full-width" type="button" (click)="login()">
+        Login
+      </button>
+    </form>
+
+    <p class="register-link">
+      Don't have an account?
+      <a routerLink="/register">Register</a>
+    </p>
+  </mat-card>
 </div>

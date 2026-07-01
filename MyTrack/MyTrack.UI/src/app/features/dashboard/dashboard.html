@@ -1,1 +1,12 @@
-<p>dashboard works!</p>
+<div class="container mt-5">
+  <h1>Dashboard</h1>
+  <p>Welcome to MyTrack.</p>
+
+  <div class="d-flex gap-3 mt-4">
+    <a class="btn btn-primary" routerLink="/projects">Projects</a>
+    <a class="btn btn-success" routerLink="/worklogs">Work Logs</a>
+    <button class="btn btn-outline-danger" type="button" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</div>

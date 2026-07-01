@@ -1,1 +1,71 @@
-<p>projects works!</p>
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Projects</h1>
+
+    <button class="btn btn-primary"
+            type="button"
+            (click)="openAddProject()">
+      Add Project
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="alert alert-info">
+    Loading projects...
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Projects Table -->
+  <table class="table table-striped" *ngIf="!isLoading">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Color</th>
+        <th>Display Order</th>
+        <th>Default</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let project of projects">
+
+        <td>{{ project.name }}</td>
+        <td>{{ project.description }}</td>
+        <td>{{ project.colorCode }}</td>
+        <td>{{ project.displayOrder }}</td>
+        <td>{{ project.isDefault ? 'Yes' : 'No' }}</td>
+        <td>{{ project.isActive ? 'Yes' : 'No' }}</td>
+
+        <td>
+
+          <button class="btn btn-sm btn-outline-primary me-2"
+                  type="button"
+                  (click)="openEditProject(project)">
+            Edit
+          </button>
+
+          <button class="btn btn-sm btn-outline-danger"
+                  type="button"
+                  (click)="deleteProject(project)">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

@@ -122,16 +122,17 @@ public class ProjectService : IProjectService
             throw new ArgumentException("Project id is required.", nameof(id));
         }
 
-        var existingProject = await _projectRepository.GetByIdAsync(
-            id,
-            _currentUserService.UserId);
+        var existingProject = await _projectRepository.GetByIdAsync(id);
 
         if (existingProject is null)
         {
             return false;
         }
 
-        await _projectRepository.DeleteAsync(existingProject);
+        existingProject.IsActive = false;
+        existingProject.ModifiedDateTime = DateTime.UtcNow;
+
+        await _projectRepository.UpdateAsync(existingProject);
 
         return true;
     }

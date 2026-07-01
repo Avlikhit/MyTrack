@@ -1,0 +1,105 @@
+<h2 mat-dialog-title>
+  {{ isEditMode ? 'Edit Work Log' : 'Add Work Log' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+
+  <!-- Work Date -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Work Date</mat-label>
+    <input matInput
+           type="date"
+           [(ngModel)]="workDate">
+  </mat-form-field>
+
+  <!-- Project -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Project</mat-label>
+
+    <mat-select [(ngModel)]="projectId">
+      <mat-option [value]="0">Select Project</mat-option>
+
+      <mat-option *ngFor="let project of projects"
+                  [value]="project.id">
+        {{ project.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Ticket Number -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Ticket Number</mat-label>
+    <input matInput
+           [(ngModel)]="ticketNumber">
+  </mat-form-field>
+
+  <!-- Task Type -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Task Type</mat-label>
+    <input matInput
+           [(ngModel)]="taskType">
+  </mat-form-field>
+
+  <!-- Description -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput
+              rows="3"
+              [(ngModel)]="description">
+    </textarea>
+  </mat-form-field>
+
+  <!-- Hours Worked -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Hours Worked</mat-label>
+    <input matInput
+           type="number"
+           step="0.25"
+           [(ngModel)]="hoursWorked">
+  </mat-form-field>
+
+  <!-- Blockers -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Blockers</mat-label>
+    <textarea matInput
+              rows="2"
+              [(ngModel)]="blockers">
+    </textarea>
+  </mat-form-field>
+
+  <!-- Learnings -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Learnings</mat-label>
+    <textarea matInput
+              rows="2"
+              [(ngModel)]="learnings">
+    </textarea>
+  </mat-form-field>
+
+  <!-- Next Steps -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Next Steps</mat-label>
+    <textarea matInput
+              rows="2"
+              [(ngModel)]="nextSteps">
+    </textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button mat-button
+          type="button"
+          (click)="cancel()">
+    Cancel
+  </button>
+
+  <button mat-flat-button
+          color="primary"
+          type="button"
+          (click)="save()">
+    {{ isEditMode ? 'Update Work Log' : 'Save Work Log' }}
+  </button>
+
+</mat-dialog-actions>

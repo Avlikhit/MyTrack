@@ -1,0 +1,27 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fb;
+}
+
+.login-card {
+  width: 420px;
+  padding: 32px;
+  text-align: center;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.register-link {
+  margin-top: 16px;
+}
