@@ -46,6 +46,8 @@ export class AddWorkLog implements OnInit {
   learnings = '';
   nextSteps = '';
 
+  validationErrors: string[] = [];
+
   constructor(
     private workLogService: WorkLogService,
     private projectService: ProjectService,
@@ -83,6 +85,40 @@ export class AddWorkLog implements OnInit {
   }
 
   save(): void {
+    this.validationErrors = [];
+
+    if (!this.workDate) {
+      this.validationErrors.push('Work date is required.');
+    }
+
+    if (!this.projectId || this.projectId === 0) {
+      this.validationErrors.push('Project is required.');
+    }
+
+    if (!this.ticketNumber.trim()) {
+      this.validationErrors.push('Ticket number is required.');
+    }
+
+    if (!this.taskType.trim()) {
+      this.validationErrors.push('Task type is required.');
+    }
+
+    if (!this.description.trim()) {
+      this.validationErrors.push('Description is required.');
+    }
+
+    if (!this.hoursWorked || this.hoursWorked <= 0) {
+      this.validationErrors.push('Hours worked must be greater than 0.');
+    }
+
+    if (this.hoursWorked > 24) {
+      this.validationErrors.push('Hours worked cannot be more than 24.');
+    }
+
+    if (this.validationErrors.length > 0) {
+      return;
+    }
+
     const request: CreateWorkLogRequest = {
       workDate: this.workDate,
       projectId: this.projectId,

@@ -2,6 +2,12 @@
   {{ isEditMode ? 'Edit Work Log' : 'Add Work Log' }}
 </h2>
 
+<div *ngIf="validationErrors.length > 0" class="alert alert-danger">
+  <div *ngFor="let error of validationErrors">
+    {{ error }}
+  </div>
+</div>
+
 <mat-dialog-content class="dialog-content">
 
   <!-- Work Date -->

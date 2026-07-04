@@ -8,6 +8,55 @@
     </button>
   </div>
 
+  <!-- Filters -->
+  <div class="d-flex align-items-end gap-3 mb-4 flex-wrap">
+
+    <div>
+      <label class="form-label">Work Date</label>
+      <input class="form-control"
+             type="date"
+             [(ngModel)]="selectedDate">
+    </div>
+
+    <div>
+      <label class="form-label">Project</label>
+      <select class="form-select"
+              [(ngModel)]="selectedProjectId">
+
+        <option [value]="0">All Projects</option>
+
+        <option *ngFor="let project of projects"
+                [value]="project.id">
+          {{ project.name }}
+        </option>
+
+      </select>
+    </div>
+
+    <div style="min-width:250px;">
+      <label class="form-label">Search</label>
+      <input class="form-control"
+             type="text"
+             placeholder="Ticket or Description"
+             [(ngModel)]="searchText">
+    </div>
+
+    <div>
+      <button class="btn btn-outline-primary me-2"
+              type="button"
+              (click)="applyProjectFilter()">
+        Search
+      </button>
+
+      <button class="btn btn-outline-secondary"
+              type="button"
+              (click)="clearDateFilter()">
+        Clear
+      </button>
+    </div>
+
+  </div>
+
   <div *ngIf="isLoading" class="alert alert-info">
     Loading work logs...
   </div>
@@ -19,18 +68,18 @@
   <table class="table table-striped" *ngIf="!isLoading">
     <thead>
       <tr>
-        <th>Date</th>
-        <th>Project</th>
-        <th>Ticket</th>
-        <th>Task Type</th>
-        <th>Description</th>
-        <th>Hours</th>
-        <th style="width: 160px;">Actions</th>
+        <th role="button" (click)="sortBy('workDate')">Date</th>
+        <th role="button" (click)="sortBy('projectName')">Project</th>
+        <th role="button" (click)="sortBy('ticketNumber')">Ticket</th>
+        <th role="button" (click)="sortBy('taskType')">Task Type</th>
+        <th role="button" (click)="sortBy('description')">Description</th>
+        <th role="button" (click)="sortBy('hoursWorked')">Hours</th>
+        <th style="width:160px;">Actions</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let workLog of workLogs">
+      <tr *ngFor="let workLog of filteredWorkLogs">
         <td>{{ workLog.workDate }}</td>
         <td>{{ workLog.projectName }}</td>
         <td>{{ workLog.ticketNumber }}</td>
@@ -54,8 +103,9 @@
     </tbody>
   </table>
 
-  <div *ngIf="!isLoading && workLogs.length === 0" class="alert alert-warning">
-    No work logs found for today.
+  <div *ngIf="!isLoading && filteredWorkLogs.length === 0"
+       class="alert alert-warning">
+    No work logs found for selected filters.
   </div>
 
 </div>
