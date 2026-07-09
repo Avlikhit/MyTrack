@@ -47,6 +47,11 @@
         <td>{{ project.isActive ? 'Yes' : 'No' }}</td>
 
         <td>
+          <button class="btn btn-sm btn-outline-info me-2"
+                  type="button"
+                  (click)="view(project.id)">
+            View
+          </button>
 
           <button class="btn btn-sm btn-outline-primary me-2"
                   type="button"
@@ -59,7 +64,6 @@
                   (click)="deleteProject(project)">
             Delete
           </button>
-
         </td>
 
       </tr>

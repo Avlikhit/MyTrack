@@ -1,12 +1,332 @@
-<div class="container mt-5">
-  <h1>Dashboard</h1>
-  <p>Welcome to MyTrack.</p>
+<div class="container mt-4">
 
-  <div class="d-flex gap-3 mt-4">
-    <a class="btn btn-primary" routerLink="/projects">Projects</a>
-    <a class="btn btn-success" routerLink="/worklogs">Work Logs</a>
-    <button class="btn btn-outline-danger" type="button" (click)="logout()">
+  <!-- Top Navigation -->
+  <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+
+    <div class="d-flex align-items-center gap-4">
+
+      <a routerLink="/dashboard"
+         class="text-decoration-none fw-semibold text-dark">
+        Dashboard
+      </a>
+
+      <a routerLink="/projects"
+         class="text-decoration-none text-secondary">
+        Projects
+      </a>
+
+      <a routerLink="/worklogs"
+         class="text-decoration-none text-secondary">
+        Work Logs
+      </a>
+
+      <a routerLink="/pay-information"
+         class="text-decoration-none text-secondary">
+        Pay
+      </a>
+
+    </div>
+
+    <button class="btn btn-outline-danger"
+            (click)="logout()">
       Logout
     </button>
+
   </div>
+
+  <!-- Welcome -->
+  <div class="mb-4">
+    <h2 class="fw-bold">
+      Welcome back{{ userName ? ', ' + userName : '' }}!
+    </h2>
+
+    <p class="text-muted">
+      Here's a quick overview of your work activity.
+    </p>
+  </div>
+
+  <!-- Today Cards -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="text-muted">Today Work Logs</h6>
+          <h2>{{ todayWorkLogs }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="text-muted">Today Hours</h6>
+          <h2>{{ todayHours }}</h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Weekly Hours Progress</h5>
+        <span class="text-muted">
+          {{ weeklyHours }} / {{ weeklyGoal }} hours
+        </span>
+      </div>
+
+      <div class="progress" style="height: 22px;">
+        <div class="progress-bar"
+             role="progressbar"
+             [style.width.%]="weeklyProgressPercent">
+          {{ weeklyProgressPercent | number:'1.0-0' }}%
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dashboard Filter -->
+  <div class="row mb-4">
+
+    <div class="col-md-3">
+
+      <label class="form-label">Dashboard Range</label>
+
+      <select class="form-select"
+              [(ngModel)]="selectedRange"
+              (change)="applyDashboardFilter()">
+
+        <option value="all">All</option>
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="custom">Custom</option>
+
+      </select>
+
+    </div>
+
+    <div class="col-md-3" *ngIf="selectedRange==='custom'">
+
+      <label class="form-label">Start Date</label>
+
+      <input type="date"
+             class="form-control"
+             [(ngModel)]="customStartDate">
+
+    </div>
+
+    <div class="col-md-3" *ngIf="selectedRange==='custom'">
+
+      <label class="form-label">End Date</label>
+
+      <input type="date"
+             class="form-control"
+             [(ngModel)]="customEndDate">
+
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end"
+         *ngIf="selectedRange==='custom'">
+
+      <button class="btn btn-primary"
+              (click)="applyDashboardFilter()">
+        Apply
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-4 mb-3">
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="text-muted">Total Work Logs</h6>
+          <h2>{{ totalWorkLogs }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="text-muted">Total Hours</h6>
+          <h2>{{ totalHours }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="text-muted">Projects Worked</h6>
+          <h2>{{ totalProjects }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="text-muted">Average Hours</h6>
+          <h2>{{ averageHours | number:'1.1-2' }}</h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mb-5">
+    <strong>Top Project:</strong>
+    {{ topProjectName || 'N/A' }}
+    <span class="text-muted">({{ topProjectHours }} hours)</span>
+  </div>
+
+  <!-- Hours by Project -->
+  <div>
+    <div class="mt-5">
+      <h3>Hours by Project</h3>
+
+      <div *ngIf="hoursByProject.length > 0" class="mt-3">
+        <div *ngFor="let item of hoursByProject" class="mb-3">
+
+          <div class="d-flex justify-content-between mb-1">
+            <strong>{{ item.projectName }}</strong>
+            <span>{{ item.hours }} hours</span>
+          </div>
+
+          <div class="progress" style="height: 18px;">
+            <div class="progress-bar"
+                 role="progressbar"
+                 [style.width.%]="(item.hours / totalHours) * 100">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="hoursByProject.length === 0" class="alert alert-warning">
+        No project hours available.
+      </div>
+    </div>
+
+    <div *ngIf="hoursByProject.length===0"
+         class="alert alert-warning">
+
+      No project hours available.
+
+    </div>
+
+  </div>
+
+  <!-- Recent Work Logs -->
+
+  <div class="mt-5">
+
+    <h3>Recent Work Logs</h3>
+
+    <table class="table table-striped mt-3">
+
+      <thead>
+
+        <tr>
+          <th>Date</th>
+          <th>Project</th>
+          <th>Ticket</th>
+          <th>Task Type</th>
+          <th>Hours</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let workLog of recentWorkLogs">
+
+          <td>{{ workLog.workDate }}</td>
+          <td>{{ workLog.projectName }}</td>
+          <td>{{ workLog.ticketNumber }}</td>
+          <td>{{ workLog.taskType }}</td>
+          <td>{{ workLog.hoursWorked }}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div *ngIf="recentWorkLogs.length===0"
+         class="alert alert-warning">
+
+      No recent work logs available.
+
+    </div>
+
+  </div>
+
+  <!-- Hours by Date -->
+
+  <div class="mt-5 mb-5">
+
+    <h3>Hours by Date</h3>
+
+    <table class="table table-striped mt-3">
+
+      <thead>
+
+        <tr>
+          <th>Date</th>
+          <th>Hours</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let item of hoursByDate">
+
+          <td>{{ item.workDate }}</td>
+          <td>{{ item.hours }}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div *ngIf="hoursByDate.length===0"
+         class="alert alert-warning">
+
+      No hours by date available.
+
+    </div>
+
+  </div>
+
+  <div class="mt-5 mb-5">
+    <h3>Quick Actions</h3>
+
+    <div class="d-flex gap-2 mt-3 flex-wrap">
+      <a routerLink="/worklogs" class="btn btn-success">
+        Add / Manage Work Logs
+      </a>
+
+      <a routerLink="/projects" class="btn btn-primary">
+        Add / Manage Projects
+      </a>
+
+      <a routerLink="/pay-information" class="btn btn-outline-primary">
+        Pay Summary
+      </a>
+    </div>
+  </div>
+
 </div>

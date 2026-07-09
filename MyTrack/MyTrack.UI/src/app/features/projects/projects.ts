@@ -8,6 +8,8 @@ import { ProjectService } from '../../core/services/project.service';
 import { Project } from '../../core/models/project.model';
 import { AddProject } from './add-project/add-project';
 
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -28,11 +30,16 @@ export class Projects implements OnInit {
   constructor(
     private projectService: ProjectService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadProjects();
+  }
+
+  view(id: number): void {
+    this.router.navigate(['/projects', id]);
   }
 
   loadProjects(): void {

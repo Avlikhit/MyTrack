@@ -1,0 +1,95 @@
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+    <h1>Pay Details</h1>
+
+    <div>
+      <button class="btn btn-outline-secondary me-2" type="button" (click)="goBack()">
+        Back
+      </button>
+
+      <button class="btn btn-primary" type="button" (click)="print()">
+        Print
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="alert alert-info no-print">
+    Loading pay details...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger no-print">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="payDetail" class="card shadow-sm print-area">
+    <div class="card-body">
+
+      <h2 class="mb-4">{{ payDetail.projectName }}</h2>
+
+      <p><strong>Date:</strong> {{ payDetail.workDate | date }}</p>
+      <p><strong>Ticket Number:</strong> {{ payDetail.ticketNumber || 'N/A' }}</p>
+      <p><strong>Task Type:</strong> {{ payDetail.taskType || 'N/A' }}</p>
+      <p><strong>Description:</strong> {{ payDetail.description || 'N/A' }}</p>
+
+      <hr>
+
+      <h4>Pay Calculation</h4>
+
+      <div class="row mt-3">
+        <div class="col-md-4 mb-3">
+          <strong>Hours Worked</strong>
+          <div>{{ payDetail.hoursWorked }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>Hourly Rate</strong>
+          <div>{{ payDetail.hourlyRate | currency }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>Gross Pay</strong>
+          <div>{{ payDetail.grossPay | currency }}</div>
+        </div>
+      </div>
+
+      <hr>
+
+      <h4>Tax Breakdown</h4>
+
+      <div class="row mt-3">
+        <div class="col-md-4 mb-3">
+          <strong>Federal Tax</strong>
+          <div>{{ payDetail.federalTax | currency }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>State Tax</strong>
+          <div>{{ payDetail.stateTax | currency }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>Social Security</strong>
+          <div>{{ payDetail.socialSecurityTax | currency }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>Medicare</strong>
+          <div>{{ payDetail.medicareTax | currency }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>Total Taxes</strong>
+          <div>{{ payDetail.totalTaxes | currency }}</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <strong>Take Home</strong>
+          <div>{{ payDetail.netPay | currency }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -36,6 +36,13 @@ export class AddProject implements OnInit {
   displayOrder = 1;
   isDefault = false;
   isActive = true;
+
+  hourlyRate = 0;
+  federalTaxPercent = 0;
+  stateTaxPercent = 0;
+  socialSecurityTaxPercent = 0;
+  medicareTaxPercent = 0;
+
   errorMessage = '';
 
   constructor(
@@ -54,6 +61,8 @@ export class AddProject implements OnInit {
       this.displayOrder = this.data.displayOrder;
       this.isDefault = this.data.isDefault;
       this.isActive = this.data.isActive;
+
+      this.hourlyRate = this.data.hourlyRate;
     }
   }
 
@@ -67,7 +76,8 @@ export class AddProject implements OnInit {
         colorCode: this.colorCode,
         displayOrder: this.displayOrder,
         isDefault: this.isDefault,
-        isActive: this.isActive
+        isActive: this.isActive,
+        hourlyRate: this.hourlyRate
       }).subscribe({
         next: () => this.dialogRef.close(true),
         error: () => this.errorMessage = 'Unable to update project.'
@@ -81,7 +91,8 @@ export class AddProject implements OnInit {
       description: this.description,
       colorCode: this.colorCode,
       displayOrder: this.displayOrder,
-      isDefault: this.isDefault
+      isDefault: this.isDefault,
+      hourlyRate: this.hourlyRate
     }).subscribe({
       next: () => this.dialogRef.close(true),
       error: () => this.errorMessage = 'Unable to create project.'

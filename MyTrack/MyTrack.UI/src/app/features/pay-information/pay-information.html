@@ -1,0 +1,169 @@
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+    <h1>Pay Summary</h1>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-success"
+              type="button"
+              (click)="exportCsv()">
+        Export CSV
+      </button>
+
+      <button class="btn btn-outline-secondary"
+              type="button"
+              (click)="printReport()">
+        Print Report
+      </button>
+
+      <button class="btn btn-outline-primary"
+              type="button"
+              (click)="openPayrollSettings()">
+        Payroll Settings
+      </button>
+    </div>
+  </div>
+
+  <div class="row mb-4 align-items-end no-print">
+
+    <div class="col-md-3">
+      <label class="form-label">Range</label>
+
+      <select class="form-select"
+              [(ngModel)]="selectedRange"
+              (change)="applyFilter()">
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="15days">Last 15 Days</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="custom">Custom</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Project</label>
+
+      <select class="form-select"
+              [(ngModel)]="selectedProjectId"
+              (change)="applyFilter()">
+        <option [value]="0">All Projects</option>
+
+        <option *ngFor="let project of projects"
+                [value]="project.id">
+          {{ project.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-md-2" *ngIf="selectedRange === 'custom'">
+      <label class="form-label">Start Date</label>
+      <input class="form-control"
+             type="date"
+             [(ngModel)]="customStartDate">
+    </div>
+
+    <div class="col-md-2" *ngIf="selectedRange === 'custom'">
+      <label class="form-label">End Date</label>
+      <input class="form-control"
+             type="date"
+             [(ngModel)]="customEndDate">
+    </div>
+
+    <div class="col-md-2" *ngIf="selectedRange === 'custom'">
+      <button class="btn btn-outline-primary"
+              type="button"
+              (click)="applyFilter()">
+        Apply
+      </button>
+    </div>
+
+  </div>
+
+  <div class="print-area">
+
+    <div class="row g-4 mb-4">
+
+      <div class="col-md-3">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="text-muted">Total Hours</h6>
+            <h3>{{ totalHours }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="text-muted">Gross Pay</h6>
+            <h3>{{ totalGrossPay | currency }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="text-muted">Taxes</h6>
+            <h3>{{ totalTaxes | currency }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="text-muted">Take Home</h6>
+            <h3>{{ totalNetPay | currency }}</h3>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <table class="table table-striped">
+
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Project</th>
+          <th>Hours</th>
+          <th>Rate</th>
+          <th>Gross</th>
+          <th>Taxes</th>
+          <th>Take Home</th>
+          <th class="no-print" style="width:120px;">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let pay of payInformation">
+          <td>{{ pay.workDate | date }}</td>
+          <td>{{ pay.projectName }}</td>
+          <td>{{ pay.hoursWorked }}</td>
+          <td>{{ pay.hourlyRate | currency }}</td>
+          <td>{{ pay.grossPay | currency }}</td>
+          <td>{{ pay.totalTaxes | currency }}</td>
+          <td>{{ pay.netPay | currency }}</td>
+
+          <td class="no-print">
+            <button class="btn btn-sm btn-outline-info"
+                    type="button"
+                    (click)="view(pay.id)">
+              View
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <div *ngIf="payInformation.length === 0" class="alert alert-warning no-print">
+      No pay records found for selected range.
+    </div>
+
+  </div>
+
+</div>

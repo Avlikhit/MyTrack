@@ -4,4 +4,5 @@ export interface CreateProjectRequest {
   colorCode: string;
   displayOrder: number;
   isDefault: boolean;
+  hourlyRate: number;
 }

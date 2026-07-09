@@ -29,4 +29,10 @@ public class CreateProjectRequest
     /// Gets or sets a value indicating whether this project is the default project.
     /// </summary>
     public bool IsDefault { get; set; }
+
+    /// <summary>
+    /// Gets or sets the hourly billing rate for the project.
+    /// </summary>
+    public decimal HourlyRate { get; set; }
+
 }

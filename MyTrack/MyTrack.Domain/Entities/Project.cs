@@ -70,4 +70,9 @@ public class Project
     /// Gets or sets the user that owns this project.
     /// </summary>
     public User? User { get; set; }
+
+    /// <summary>
+    /// Gets or sets the hourly billing rate for the project.
+    /// </summary>
+    public decimal HourlyRate { get; set; }
 }

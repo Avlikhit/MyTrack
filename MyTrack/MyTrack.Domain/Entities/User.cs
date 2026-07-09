@@ -26,6 +26,26 @@ public class User
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the user's role.
+    /// </summary>
+    public string Role { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the user's contact number.
+    /// </summary>
+    public string ContactNumber { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the user's home address.
+    /// </summary>
+    public string HomeAddress { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the user's work address.
+    /// </summary>
+    public string WorkAddress { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the hashed password.
     /// Plain text passwords must never be stored.
     /// </summary>

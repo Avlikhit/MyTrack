@@ -21,4 +21,11 @@ public interface IUserRepository
     /// Gets a user by id.
     /// </summary>
     Task<User?> GetByIdAsync(int id);
+
+    /// <summary>
+    /// Updates an existing user.
+    /// </summary>
+    /// <param name="user">The user to update.</param>
+    /// <returns>The updated user.</returns>
+    Task<User> UpdateAsync(User user);
 }

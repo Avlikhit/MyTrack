@@ -14,6 +14,10 @@ export class WorkLogService {
 
   constructor(private http: HttpClient) { }
 
+  getAll(): Observable<WorkLog[]> {
+    return this.http.get<WorkLog[]>(this.apiUrl);
+  }
+
   getById(id: number): Observable<WorkLog> {
     return this.http.get<WorkLog>(`${this.apiUrl}/${id}`);
   }

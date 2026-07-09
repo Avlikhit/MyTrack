@@ -34,11 +34,15 @@ builder.Services.AddScoped<IWorkLogService, WorkLogService>();
 builder.Services.AddScoped<IWorkLogRepository, WorkLogRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IPayInformationService, PayInformationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPayInformationRepository, PayInformationRepository>();
+builder.Services.AddScoped<IPayrollSettingsRepository, PayrollSettingsRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IPayrollSettingsService, PayrollSettingsService>();
 
 builder.Services.AddDbContext<MyTrackDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyTrackDatabase")));

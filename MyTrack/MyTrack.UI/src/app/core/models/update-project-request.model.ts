@@ -5,4 +5,5 @@ export interface UpdateProjectRequest {
   displayOrder: number;
   isDefault: boolean;
   isActive: boolean;
+  hourlyRate: number;
 }

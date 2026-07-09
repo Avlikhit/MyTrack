@@ -34,4 +34,9 @@ public class UpdateProjectRequest
     /// Gets or sets a value indicating whether the project is active.
     /// </summary>
     public bool IsActive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the hourly billing rate for the project.
+    /// </summary>
+    public decimal HourlyRate { get; set; }
 }

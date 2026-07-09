@@ -49,4 +49,9 @@ public class ProjectResponse
     /// Gets or sets the date and time when the project was last modified.
     /// </summary>
     public DateTime? ModifiedDateTime { get; set; }
+
+    /// <summary>
+    /// Gets or sets the hourly billing rate for the project.
+    /// </summary>
+    public decimal HourlyRate { get; set; }
 }

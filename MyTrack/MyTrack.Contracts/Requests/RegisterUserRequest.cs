@@ -21,6 +21,26 @@ public class RegisterUserRequest
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the user's role.
+    /// </summary>
+    public string Role { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the user's contact number.
+    /// </summary>
+    public string ContactNumber { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the user's home address.
+    /// </summary>
+    public string HomeAddress { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the user's work address.
+    /// </summary>
+    public string WorkAddress { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the user's password.
     /// </summary>
     public string Password { get; set; } = string.Empty;

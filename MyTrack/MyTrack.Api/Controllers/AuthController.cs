@@ -50,4 +50,59 @@ public class AuthController : ControllerBase
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Gets the logged-in user's profile.
+    /// </summary>
+    [Authorize]
+    [HttpGet("profile")]
+    [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<UserProfileResponse>> GetProfileAsync()
+    {
+        var response = await _authService.GetProfileAsync(GetUserId());
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Updates the logged-in user's profile.
+    /// </summary>
+    [Authorize]
+    [HttpPut("profile")]
+    [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<UserProfileResponse>> UpdateProfileAsync(UpdateUserProfileRequest request)
+    {
+        var response = await _authService.UpdateProfileAsync(GetUserId(), request);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Changes the logged-in user's password.
+    /// </summary>
+    [Authorize]
+    [HttpPut("change-password")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest request)
+    {
+        await _authService.ChangePasswordAsync(GetUserId(), request);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Gets the logged-in user id from claims.
+    /// </summary>
+    /// <returns>The logged-in user id.</returns>
+    private int GetUserId()
+    {
+        var userIdClaim = User.FindFirst("userId")?.Value;
+
+        if (string.IsNullOrWhiteSpace(userIdClaim))
+        {
+            throw new UnauthorizedAccessException("User id claim is missing.");
+        }
+
+        return int.Parse(userIdClaim);
+    }
 }

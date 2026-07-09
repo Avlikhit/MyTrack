@@ -1,0 +1,72 @@
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+    <h1>Work Log Details</h1>
+
+    <div>
+      <button class="btn btn-outline-secondary me-2" type="button" (click)="goBack()">
+        Back
+      </button>
+
+      <button class="btn btn-primary" type="button" (click)="print()">
+        Print
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="alert alert-info no-print">
+    Loading work log details...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger no-print">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="workLog" class="card shadow-sm print-area">
+    <div class="card-body">
+
+      <h2 class="mb-4">Work Log Details</h2>
+
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Date:</strong></div>
+        <div class="col-md-8">{{ workLog.workDate }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Project:</strong></div>
+        <div class="col-md-8">{{ workLog.projectName }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Ticket:</strong></div>
+        <div class="col-md-8">{{ workLog.ticketNumber }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Task Type:</strong></div>
+        <div class="col-md-8">{{ workLog.taskType }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Hours:</strong></div>
+        <div class="col-md-8">{{ workLog.hoursWorked }}</div>
+      </div>
+
+      <hr>
+
+      <h5>Description</h5>
+      <p>{{ workLog.description || 'N/A' }}</p>
+
+      <h5>Blockers</h5>
+      <p>{{ workLog.blockers || 'N/A' }}</p>
+
+      <h5>Learnings</h5>
+      <p>{{ workLog.learnings || 'N/A' }}</p>
+
+      <h5>Next Steps</h5>
+      <p>{{ workLog.nextSteps || 'N/A' }}</p>
+
+    </div>
+  </div>
+
+</div>

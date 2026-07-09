@@ -8,4 +8,5 @@ export interface Project {
   isActive: boolean;
   createdDateTime: string;
   modifiedDateTime?: string;
+  hourlyRate: number;
 }

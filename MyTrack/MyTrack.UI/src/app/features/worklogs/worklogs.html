@@ -1,35 +1,36 @@
 <div class="container mt-5">
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 no-print">
     <h1>Work Logs</h1>
 
-    <button class="btn btn-primary" type="button" (click)="openAddWorkLog()">
-      Add Work Log
-    </button>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-success" type="button" (click)="exportCsv()">
+        Export CSV
+      </button>
+
+      <button class="btn btn-outline-secondary" type="button" (click)="printReport()">
+        Print Report
+      </button>
+
+      <button class="btn btn-primary" type="button" (click)="openAddWorkLog()">
+        Add Work Log
+      </button>
+    </div>
   </div>
 
-  <!-- Filters -->
-  <div class="d-flex align-items-end gap-3 mb-4 flex-wrap">
-
+  <div class="d-flex align-items-end gap-3 mb-4 flex-wrap no-print">
     <div>
       <label class="form-label">Work Date</label>
-      <input class="form-control"
-             type="date"
-             [(ngModel)]="selectedDate">
+      <input class="form-control" type="date" [(ngModel)]="selectedDate">
     </div>
 
     <div>
       <label class="form-label">Project</label>
-      <select class="form-select"
-              [(ngModel)]="selectedProjectId">
-
+      <select class="form-select" [(ngModel)]="selectedProjectId">
         <option [value]="0">All Projects</option>
-
-        <option *ngFor="let project of projects"
-                [value]="project.id">
+        <option *ngFor="let project of projects" [value]="project.id">
           {{ project.name }}
         </option>
-
       </select>
     </div>
 
@@ -44,7 +45,7 @@
     <div>
       <button class="btn btn-outline-primary me-2"
               type="button"
-              (click)="applyProjectFilter()">
+              (click)="loadWorkLogsByDate()">
         Search
       </button>
 
@@ -54,57 +55,90 @@
         Clear
       </button>
     </div>
-
   </div>
 
-  <div *ngIf="isLoading" class="alert alert-info">
+  <div *ngIf="isLoading" class="alert alert-info no-print">
     Loading work logs...
   </div>
 
-  <div *ngIf="errorMessage" class="alert alert-danger">
+  <div *ngIf="errorMessage" class="alert alert-danger no-print">
     {{ errorMessage }}
   </div>
 
-  <table class="table table-striped" *ngIf="!isLoading">
-    <thead>
-      <tr>
-        <th role="button" (click)="sortBy('workDate')">Date</th>
-        <th role="button" (click)="sortBy('projectName')">Project</th>
-        <th role="button" (click)="sortBy('ticketNumber')">Ticket</th>
-        <th role="button" (click)="sortBy('taskType')">Task Type</th>
-        <th role="button" (click)="sortBy('description')">Description</th>
-        <th role="button" (click)="sortBy('hoursWorked')">Hours</th>
-        <th style="width:160px;">Actions</th>
-      </tr>
-    </thead>
+  <div class="print-area">
+    <div class="print-only mb-4">
+      <h2>{{ reportTitle }}</h2>
+      <p><strong>Range:</strong> {{ reportRangeText }}</p>
+      <p><strong>Project:</strong> {{ reportProjectText }}</p>
+    </div>
+    <table class="table table-striped" *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th role="button" (click)="sortBy('workDate')">Date</th>
+          <th role="button" (click)="sortBy('projectName')">Project</th>
+          <th role="button" (click)="sortBy('ticketNumber')">Ticket</th>
+          <th role="button" (click)="sortBy('taskType')">Task Type</th>
+          <th role="button" (click)="sortBy('description')">Description</th>
+          <th role="button" (click)="sortBy('hoursWorked')">Hours</th>
+          <th class="no-print" style="width:220px;">Actions</th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr *ngFor="let workLog of filteredWorkLogs">
-        <td>{{ workLog.workDate }}</td>
-        <td>{{ workLog.projectName }}</td>
-        <td>{{ workLog.ticketNumber }}</td>
-        <td>{{ workLog.taskType }}</td>
-        <td>{{ workLog.description }}</td>
-        <td>{{ workLog.hoursWorked }}</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary me-2"
-                  type="button"
-                  (click)="openEditWorkLog(workLog)">
-            Edit
-          </button>
+      <tbody>
+        <tr *ngFor="let workLog of pagedWorkLogs" class="no-print">
+          <td>{{ workLog.workDate }}</td>
+          <td>{{ workLog.projectName }}</td>
+          <td>{{ workLog.ticketNumber }}</td>
+          <td>{{ workLog.taskType }}</td>
+          <td>{{ workLog.description }}</td>
+          <td>{{ workLog.hoursWorked }}</td>
 
-          <button class="btn btn-sm btn-outline-danger"
-                  type="button"
-                  (click)="deleteWorkLog(workLog)">
-            Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td>
+            <button class="btn btn-sm btn-outline-info me-2"
+                    type="button"
+                    (click)="view(workLog.id)">
+              View
+            </button>
 
-  <div *ngIf="!isLoading && filteredWorkLogs.length === 0"
-       class="alert alert-warning">
+            <button class="btn btn-sm btn-outline-primary me-2"
+                    type="button"
+                    (click)="openEditWorkLog(workLog)">
+              Edit
+            </button>
+
+            <button class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="deleteWorkLog(workLog)">
+              Delete
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngFor="let workLog of filteredWorkLogs" class="print-only">
+          <td>{{ workLog.workDate }}</td>
+          <td>{{ workLog.projectName }}</td>
+          <td>{{ workLog.ticketNumber }}</td>
+          <td>{{ workLog.taskType }}</td>
+          <td>{{ workLog.description }}</td>
+          <td>{{ workLog.hoursWorked }}</td>
+          <td class="no-print"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <mat-paginator class="no-print"
+                 [length]="filteredWorkLogs.length"
+                 [pageSize]="pageSize"
+                 [pageIndex]="pageIndex"
+                 [pageSizeOptions]="[5,10,20]"
+                 (page)="pageIndex = $event.pageIndex;
+                         pageSize = $event.pageSize;
+                         updatePagedWorkLogs()">
+  </mat-paginator>
+
+  <div *ngIf="!isLoading && pagedWorkLogs.length === 0"
+       class="alert alert-warning no-print">
     No work logs found for selected filters.
   </div>
 

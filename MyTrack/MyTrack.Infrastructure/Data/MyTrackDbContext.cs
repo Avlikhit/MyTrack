@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyTrack.API.Models;
 using MyTrack.Domain.Entities;
 
 namespace MyTrack.Infrastructure.Data;
@@ -33,6 +34,16 @@ public class MyTrackDbContext : DbContext
     public DbSet<User> Users { get; set; }
 
     /// <summary>
+    /// Gets or sets the PayInformations table.
+    /// </summary>
+    public DbSet<PayInformation> PayInformations { get; set; }
+
+    /// <summary>
+    /// Gets or sets the payroll settings table.
+    /// </summary>
+    public DbSet<PayrollSettings> PayrollSettings { get; set; }
+
+    /// <summary>
     /// Configures entity relationships.
     /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,5 +71,54 @@ public class MyTrackDbContext : DbContext
         modelBuilder.Entity<WorkLog>()
             .Property(w => w.HoursWorked)
             .HasPrecision(5, 2);
+
+        modelBuilder.Entity<PayInformation>()
+    .Property(p => p.GrossPay)
+    .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayInformation>()
+            .Property(p => p.FederalTax)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayInformation>()
+            .Property(p => p.StateTax)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayInformation>()
+            .Property(p => p.SocialSecurityTax)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayInformation>()
+            .Property(p => p.MedicareTax)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayInformation>()
+            .Property(p => p.OtherDeductions)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayInformation>()
+            .Property(p => p.NetPay)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<Project>()
+            .Property(p => p.HourlyRate)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<PayrollSettings>()
+            .Property(p => p.FederalTaxPercent)
+            .HasPrecision(5, 2);
+
+        modelBuilder.Entity<PayrollSettings>()
+            .Property(p => p.StateTaxPercent)
+            .HasPrecision(5, 2);
+
+        modelBuilder.Entity<PayrollSettings>()
+            .Property(p => p.SocialSecurityTaxPercent)
+            .HasPrecision(5, 2);
+
+        modelBuilder.Entity<PayrollSettings>()
+            .Property(p => p.MedicareTaxPercent)
+            .HasPrecision(5, 2);
+
     }
 }

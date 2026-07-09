@@ -43,7 +43,8 @@ public class ProjectService : IProjectService
             DisplayOrder = request.DisplayOrder,
             IsDefault = request.IsDefault,
             IsActive = true,
-            CreatedDateTime = DateTime.UtcNow
+            CreatedDateTime = DateTime.UtcNow,
+            HourlyRate = request.HourlyRate
         };
 
         var savedProject = await _projectRepository.AddAsync(project);
@@ -80,6 +81,8 @@ public class ProjectService : IProjectService
         existingProject.IsDefault = request.IsDefault;
         existingProject.IsActive = request.IsActive;
         existingProject.ModifiedDateTime = DateTime.UtcNow;
+        existingProject.HourlyRate = request.HourlyRate;
+
 
         var updatedProject = await _projectRepository.UpdateAsync(existingProject);
 
@@ -154,7 +157,8 @@ public class ProjectService : IProjectService
             IsDefault = project.IsDefault,
             IsActive = project.IsActive,
             CreatedDateTime = project.CreatedDateTime,
-            ModifiedDateTime = project.ModifiedDateTime
+            ModifiedDateTime = project.ModifiedDateTime,
+            HourlyRate = project.HourlyRate
         };
     }
 }
