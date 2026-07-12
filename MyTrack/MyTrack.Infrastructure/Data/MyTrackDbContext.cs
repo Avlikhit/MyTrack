@@ -44,6 +44,11 @@ public class MyTrackDbContext : DbContext
     public DbSet<PayrollSettings> PayrollSettings { get; set; }
 
     /// <summary>
+    /// Gets or sets notification settings.
+    /// </summary>
+    public DbSet<NotificationSettings> NotificationSettings { get; set; }
+
+    /// <summary>
     /// Configures entity relationships.
     /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -119,6 +124,16 @@ public class MyTrackDbContext : DbContext
         modelBuilder.Entity<PayrollSettings>()
             .Property(p => p.MedicareTaxPercent)
             .HasPrecision(5, 2);
+
+        modelBuilder.Entity<NotificationSettings>()
+            .HasOne(settings => settings.User)
+            .WithOne(user => user.NotificationSettings)
+            .HasForeignKey<NotificationSettings>(settings => settings.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<NotificationSettings>()
+            .HasIndex(settings => settings.UserId)
+            .IsUnique();
 
     }
 }

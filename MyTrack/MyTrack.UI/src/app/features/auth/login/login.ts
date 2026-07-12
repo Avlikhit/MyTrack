@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -26,30 +26,68 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './login.scss'
 })
 export class Login {
-
   email = '';
   password = '';
+
   errorMessage = '';
+  isSubmitting = false;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   login(): void {
     this.errorMessage = '';
 
+    const email = this.email.trim();
+
+    if (!email || !this.password) {
+      this.errorMessage = 'Email and password are required.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
     this.authService.login({
-      email: this.email,
+      email,
       password: this.password
     }).subscribe({
       next: (response) => {
+        this.isSubmitting = false;
         this.authService.saveToken(response.token);
         this.router.navigate(['/dashboard']);
       },
-      error: () => {
-        this.errorMessage = 'Invalid email or password.';
+      error: (error) => {
+        console.error('Login error:', error);
+        console.error('Login error body:', error?.error);
+
+        this.isSubmitting = false;
+        this.errorMessage = this.getErrorMessage(error);
+
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  private getErrorMessage(error: any): string {
+    if (typeof error?.error === 'string' && error.error.trim()) {
+      return error.error;
+    }
+
+    if (error?.error?.message) {
+      return error.error.message;
+    }
+
+    if (error?.error?.title) {
+      return error.error.title;
+    }
+
+    if (error?.message) {
+      return error.message;
+    }
+
+    return 'Unable to log in. Please try again.';
   }
 }

@@ -1,18 +1,25 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { WorkLogService } from '../../core/services/work-log.service';
+
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { NotificationSettingsDialog } from './notification-settings-dialog/notification-settings-dialog';
+
+import { NotificationSettingsService } from '../../core/services/notification-settings.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterLink,
-    FormsModule
+    RouterLinkActive,
+    MatDialogModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
@@ -45,11 +52,18 @@ export class Dashboard implements OnInit {
   weeklyGoal = 40;
   weeklyProgressPercent = 0;
 
+  notificationMessages: string[] = [];
+  notificationCount = 0;
+
+  showNotificationPanel = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private workLogService: WorkLogService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private notificationSettingsService: NotificationSettingsService
   ) { }
 
   ngOnInit(): void {
@@ -123,6 +137,83 @@ export class Dashboard implements OnInit {
     this.cdr.detectChanges();
   }
 
+  loadDashboardNotifications(): void {
+    this.notificationMessages = [];
+    this.notificationCount = 0;
+
+    this.notificationSettingsService.get().subscribe({
+      next: (settings) => {
+        if (!settings.notificationsEnabled) {
+          return;
+        }
+
+        this.checkDailyWorkLogReminder(settings);
+        this.checkMonthlySummaryReminder(settings);
+
+        this.notificationCount = this.notificationMessages.length;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Unable to load dashboard notifications', error);
+      }
+    });
+  }
+
+  checkDailyWorkLogReminder(settings: any): void {
+    if (!settings.dailyWorkLogReminderEnabled) {
+      return;
+    }
+
+    const now = new Date();
+
+    const reminderParts = settings.dailyReminderTime
+      .substring(0, 5)
+      .split(':');
+
+    const reminderHour = Number(reminderParts[0]);
+    const reminderMinute = Number(reminderParts[1]);
+
+    const reminderTime = new Date(now);
+    reminderTime.setHours(reminderHour, reminderMinute, 0, 0);
+
+    if (now < reminderTime) {
+      return;
+    }
+
+    if (this.todayWorkLogs === 0) {
+      this.notificationMessages.push(
+        'You have not added a work log for today.'
+      );
+    }
+  }
+
+  checkMonthlySummaryReminder(settings: any): void {
+    if (!settings.monthlySummaryReminderEnabled) {
+      return;
+    }
+
+    const today = new Date();
+
+    const nextMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1
+    );
+
+    const differenceInMilliseconds =
+      nextMonth.getTime() - today.getTime();
+
+    const daysUntilNextMonth = Math.ceil(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
+
+    if (daysUntilNextMonth <= settings.monthlyReminderDaysBefore) {
+      this.notificationMessages.push(
+        'Your monthly work summary is ready for review.'
+      );
+    }
+  }
+
   calculateDashboard(filteredLogs: any[]): void {
     this.totalWorkLogs = filteredLogs.length;
 
@@ -159,6 +250,19 @@ export class Dashboard implements OnInit {
     this.buildRecentWorkLogs(this.allWorkLogs);
     this.buildHoursByDate(this.allWorkLogs);
     this.setTopProject();
+  }
+
+  openNotificationSettings(): void {
+    const dialogRef = this.dialog.open(NotificationSettingsDialog, {
+      width: '560px',
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadDashboardNotifications();
+      }
+    });
   }
 
   calculateWeeklyProgress(): void {
@@ -234,6 +338,25 @@ export class Dashboard implements OnInit {
       .sort((a, b) =>
         new Date(b.workDate).getTime() - new Date(a.workDate).getTime()
       );
+  }
+
+  toggleNotificationPanel(): void {
+    this.showNotificationPanel = !this.showNotificationPanel;
+  }
+
+  closeNotificationPanel(): void {
+    this.showNotificationPanel = false;
+  }
+
+  clearNotifications(): void {
+    this.notificationMessages = [];
+    this.notificationCount = 0;
+    this.showNotificationPanel = false;
+  }
+
+  openNotificationSettingsFromPanel(): void {
+    this.showNotificationPanel = false;
+    this.openNotificationSettings();
   }
 
   setTopProject(): void {

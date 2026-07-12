@@ -1,48 +1,140 @@
-<div class="container mt-5">
+<div class="container mt-4">
 
+  <!-- Branded Header -->
+  <header class="page-header mb-4 no-print">
+
+    <div class="page-header-left">
+
+      <a routerLink="/dashboard"
+         class="brand-link"
+         aria-label="Go to dashboard">
+
+        <img src="/branding/mytrack-logo-dark.svg"
+             alt="MyTrack"
+             class="page-logo">
+
+      </a>
+
+      <nav class="page-navigation"
+           aria-label="Main navigation">
+
+        <a routerLink="/dashboard"
+           routerLinkActive="active-nav-link"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-link">
+          Dashboard
+        </a>
+
+        <a routerLink="/projects"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Projects
+        </a>
+
+        <a routerLink="/worklogs"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Work Logs
+        </a>
+
+        <a routerLink="/pay-information"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Pay
+        </a>
+
+      </nav>
+
+    </div>
+
+    <div class="page-header-actions">
+
+      <a routerLink="/profile"
+         class="profile-avatar"
+         title="Profile"
+         aria-label="Open profile">
+        U
+      </a>
+
+    </div>
+
+  </header>
+
+  <!-- Page Title and Actions -->
   <div class="d-flex justify-content-between align-items-center mb-4 no-print">
-    <h1>Work Logs</h1>
+
+    <div>
+      <h1 class="mb-1">Work Logs</h1>
+
+      <p class="text-muted mb-0">
+        Manage, filter, export, and print your recorded work activity.
+      </p>
+    </div>
 
     <div class="d-flex gap-2">
-      <button class="btn btn-outline-success" type="button" (click)="exportCsv()">
+
+      <button class="btn btn-outline-success"
+              type="button"
+              (click)="exportCsv()">
         Export CSV
       </button>
 
-      <button class="btn btn-outline-secondary" type="button" (click)="printReport()">
+      <button class="btn btn-outline-secondary"
+              type="button"
+              (click)="printReport()">
         Print Report
       </button>
 
-      <button class="btn btn-primary" type="button" (click)="openAddWorkLog()">
+      <button class="btn btn-primary"
+              type="button"
+              (click)="openAddWorkLog()">
         Add Work Log
       </button>
+
     </div>
+
   </div>
 
+  <!-- Filters -->
   <div class="d-flex align-items-end gap-3 mb-4 flex-wrap no-print">
+
     <div>
       <label class="form-label">Work Date</label>
-      <input class="form-control" type="date" [(ngModel)]="selectedDate">
+
+      <input class="form-control"
+             type="date"
+             [(ngModel)]="selectedDate">
     </div>
 
     <div>
       <label class="form-label">Project</label>
-      <select class="form-select" [(ngModel)]="selectedProjectId">
-        <option [value]="0">All Projects</option>
-        <option *ngFor="let project of projects" [value]="project.id">
+
+      <select class="form-select"
+              [(ngModel)]="selectedProjectId">
+
+        <option [value]="0">
+          All Projects
+        </option>
+
+        <option *ngFor="let project of projects"
+                [value]="project.id">
           {{ project.name }}
         </option>
+
       </select>
     </div>
 
-    <div style="min-width:250px;">
+    <div style="min-width: 250px;">
       <label class="form-label">Search</label>
+
       <input class="form-control"
              type="text"
-             placeholder="Ticket or Description"
+             placeholder="Ticket or description"
              [(ngModel)]="searchText">
     </div>
 
     <div>
+
       <button class="btn btn-outline-primary me-2"
               type="button"
               (click)="loadWorkLogsByDate()">
@@ -54,92 +146,168 @@
               (click)="clearDateFilter()">
         Clear
       </button>
+
     </div>
+
   </div>
 
-  <div *ngIf="isLoading" class="alert alert-info no-print">
+  <!-- Loading -->
+  <div *ngIf="isLoading"
+       class="alert alert-info no-print">
     Loading work logs...
   </div>
 
-  <div *ngIf="errorMessage" class="alert alert-danger no-print">
+  <!-- Error -->
+  <div *ngIf="errorMessage"
+       class="alert alert-danger no-print">
     {{ errorMessage }}
   </div>
 
+  <!-- Printable Content -->
   <div class="print-area">
-    <div class="print-only mb-4">
-      <h2>{{ reportTitle }}</h2>
-      <p><strong>Range:</strong> {{ reportRangeText }}</p>
-      <p><strong>Project:</strong> {{ reportProjectText }}</p>
+
+    <!-- Print-only Report Header -->
+    <div class="print-only print-report-header">
+
+      <img src="/branding/mytrack-logo.svg"
+           alt="MyTrack"
+           class="print-logo">
+
+      <div class="print-report-title">
+        <h2>{{ reportTitle }}</h2>
+
+        <p>
+          <strong>Range:</strong>
+          {{ reportRangeText }}
+        </p>
+
+        <p>
+          <strong>Project:</strong>
+          {{ reportProjectText }}
+        </p>
+      </div>
+
     </div>
-    <table class="table table-striped" *ngIf="!isLoading">
-      <thead>
-        <tr>
-          <th role="button" (click)="sortBy('workDate')">Date</th>
-          <th role="button" (click)="sortBy('projectName')">Project</th>
-          <th role="button" (click)="sortBy('ticketNumber')">Ticket</th>
-          <th role="button" (click)="sortBy('taskType')">Task Type</th>
-          <th role="button" (click)="sortBy('description')">Description</th>
-          <th role="button" (click)="sortBy('hoursWorked')">Hours</th>
-          <th class="no-print" style="width:220px;">Actions</th>
-        </tr>
-      </thead>
 
-      <tbody>
-        <tr *ngFor="let workLog of pagedWorkLogs" class="no-print">
-          <td>{{ workLog.workDate }}</td>
-          <td>{{ workLog.projectName }}</td>
-          <td>{{ workLog.ticketNumber }}</td>
-          <td>{{ workLog.taskType }}</td>
-          <td>{{ workLog.description }}</td>
-          <td>{{ workLog.hoursWorked }}</td>
+    <div class="table-responsive"
+         *ngIf="!isLoading">
 
-          <td>
-            <button class="btn btn-sm btn-outline-info me-2"
-                    type="button"
-                    (click)="view(workLog.id)">
-              View
-            </button>
+      <table class="table table-striped align-middle">
 
-            <button class="btn btn-sm btn-outline-primary me-2"
-                    type="button"
-                    (click)="openEditWorkLog(workLog)">
-              Edit
-            </button>
+        <thead>
+          <tr>
 
-            <button class="btn btn-sm btn-outline-danger"
-                    type="button"
-                    (click)="deleteWorkLog(workLog)">
-              Delete
-            </button>
-          </td>
-        </tr>
+            <th role="button"
+                (click)="sortBy('workDate')">
+              Date
+            </th>
 
-        <tr *ngFor="let workLog of filteredWorkLogs" class="print-only">
-          <td>{{ workLog.workDate }}</td>
-          <td>{{ workLog.projectName }}</td>
-          <td>{{ workLog.ticketNumber }}</td>
-          <td>{{ workLog.taskType }}</td>
-          <td>{{ workLog.description }}</td>
-          <td>{{ workLog.hoursWorked }}</td>
-          <td class="no-print"></td>
-        </tr>
-      </tbody>
-    </table>
+            <th role="button"
+                (click)="sortBy('projectName')">
+              Project
+            </th>
+
+            <th role="button"
+                (click)="sortBy('ticketNumber')">
+              Ticket
+            </th>
+
+            <th role="button"
+                (click)="sortBy('taskType')">
+              Task Type
+            </th>
+
+            <th role="button"
+                (click)="sortBy('description')">
+              Description
+            </th>
+
+            <th role="button"
+                (click)="sortBy('hoursWorked')">
+              Hours
+            </th>
+
+            <th class="no-print"
+                style="width: 220px;">
+              Actions
+            </th>
+
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <!-- Screen Rows -->
+          <tr *ngFor="let workLog of pagedWorkLogs"
+              class="no-print">
+
+            <td>{{ workLog.workDate }}</td>
+            <td>{{ workLog.projectName }}</td>
+            <td>{{ workLog.ticketNumber }}</td>
+            <td>{{ workLog.taskType }}</td>
+            <td>{{ workLog.description }}</td>
+            <td>{{ workLog.hoursWorked }}</td>
+
+            <td class="no-print">
+
+              <button class="btn btn-sm btn-outline-info me-2"
+                      type="button"
+                      (click)="view(workLog.id)">
+                View
+              </button>
+
+              <button class="btn btn-sm btn-outline-primary me-2"
+                      type="button"
+                      (click)="openEditWorkLog(workLog)">
+                Edit
+              </button>
+
+              <button class="btn btn-sm btn-outline-danger"
+                      type="button"
+                      (click)="deleteWorkLog(workLog)">
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+          <!-- Print Rows -->
+          <tr *ngFor="let workLog of filteredWorkLogs"
+              class="print-only">
+
+            <td>{{ workLog.workDate }}</td>
+            <td>{{ workLog.projectName }}</td>
+            <td>{{ workLog.ticketNumber }}</td>
+            <td>{{ workLog.taskType }}</td>
+            <td>{{ workLog.description }}</td>
+            <td>{{ workLog.hoursWorked }}</td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
   </div>
 
+  <!-- Pagination -->
   <mat-paginator class="no-print"
                  [length]="filteredWorkLogs.length"
                  [pageSize]="pageSize"
                  [pageIndex]="pageIndex"
-                 [pageSizeOptions]="[5,10,20]"
+                 [pageSizeOptions]="[5, 10, 20]"
                  (page)="pageIndex = $event.pageIndex;
                          pageSize = $event.pageSize;
                          updatePagedWorkLogs()">
   </mat-paginator>
 
+  <!-- Empty State -->
   <div *ngIf="!isLoading && pagedWorkLogs.length === 0"
        class="alert alert-warning no-print">
-    No work logs found for selected filters.
+    No work logs found for the selected filters.
   </div>
 
 </div>

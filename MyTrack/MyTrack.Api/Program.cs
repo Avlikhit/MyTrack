@@ -38,6 +38,8 @@ builder.Services.AddScoped<IPayInformationService, PayInformationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPayInformationRepository, PayInformationRepository>();
 builder.Services.AddScoped<IPayrollSettingsRepository, PayrollSettingsRepository>();
+builder.Services.AddScoped<INotificationSettingsRepository, NotificationSettingsRepository>();
+builder.Services.AddScoped<INotificationSettingsService, NotificationSettingsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddHttpContextAccessor();

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyTrack.Application.Interfaces;
 using MyTrack.Contracts.Requests;
 using MyTrack.Contracts.Responses;
+using System.Security.Claims;
 
 namespace MyTrack.Api.Controllers;
 
@@ -46,9 +47,19 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<LoginResponse>> LoginAsync(LoginRequest request)
     {
-        var response = await _authService.LoginAsync(request);
+        try
+        {
+            var response = await _authService.LoginAsync(request);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(new
+            {
+                message = exception.Message
+            });
+        }
     }
 
     /// <summary>
@@ -91,18 +102,26 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Gets the logged-in user id from claims.
+    /// Gets the logged-in user id from the authentication claims.
     /// </summary>
     /// <returns>The logged-in user id.</returns>
+    /// <exception cref="UnauthorizedAccessException">
+    /// Thrown when the user id claim is missing or invalid.
+    /// </exception>
     private int GetUserId()
     {
-        var userIdClaim = User.FindFirst("userId")?.Value;
+        var userIdClaim =
+            User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("userId")?.Value
+            ?? User.FindFirst("sub")?.Value;
 
-        if (string.IsNullOrWhiteSpace(userIdClaim))
+        if (string.IsNullOrWhiteSpace(userIdClaim) ||
+            !int.TryParse(userIdClaim, out var userId))
         {
-            throw new UnauthorizedAccessException("User id claim is missing.");
+            throw new UnauthorizedAccessException(
+                "A valid user id claim is missing.");
         }
 
-        return int.Parse(userIdClaim);
+        return userId;
     }
 }

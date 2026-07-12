@@ -75,4 +75,9 @@ public class User
     /// Gets or sets the work logs owned by the user.
     /// </summary>
     public ICollection<WorkLog> WorkLogs { get; set; } = new List<WorkLog>();
+
+    /// <summary>
+    /// Gets or sets the user's notification settings.
+    /// </summary>
+    public NotificationSettings? NotificationSettings { get; set; }
 }

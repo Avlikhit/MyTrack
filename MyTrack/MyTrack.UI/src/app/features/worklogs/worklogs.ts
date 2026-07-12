@@ -19,7 +19,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { WorklogReportFilter, WorklogReportFilterResult } from './worklog-report-filter/worklog-report-filter';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-worklogs',
@@ -30,7 +30,9 @@ import { Router } from '@angular/router';
     MatDialogModule,
     MatButtonModule,
     MatPaginatorModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './worklogs.html',
   styleUrl: './worklogs.scss'

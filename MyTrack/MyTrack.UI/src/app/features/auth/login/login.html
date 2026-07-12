@@ -1,28 +1,61 @@
 <div class="login-page">
   <mat-card class="login-card">
-    <h1>MyTrack</h1>
-    <p class="subtitle">Sign in to continue</p>
 
-    <form>
-      <mat-form-field appearance="outline" class="full-width">
+    <img src="/branding/mytrack-logo.svg"
+         alt="MyTrack logo"
+         class="login-logo">
+
+    <p class="brand-tagline">
+      Track • Manage • Grow
+    </p>
+
+    <p class="subtitle">
+      Sign in to continue
+    </p>
+
+    <form (ngSubmit)="login()">
+
+      <div *ngIf="errorMessage"
+           class="alert alert-danger mb-3">
+        {{ errorMessage }}
+      </div>
+
+      <mat-form-field appearance="outline"
+                      class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput type="email" name="email" [(ngModel)]="email" />
+
+        <input matInput
+               type="email"
+               name="email"
+               autocomplete="email"
+               [(ngModel)]="email">
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline"
+                      class="full-width">
         <mat-label>Password</mat-label>
-        <input matInput type="password" name="password" [(ngModel)]="password" />
+
+        <input matInput
+               type="password"
+               name="password"
+               autocomplete="current-password"
+               [(ngModel)]="password">
       </mat-form-field>
 
-      <p class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</p>
-      <button mat-flat-button color="primary" class="full-width" type="button" (click)="login()">
-        Login
+      <button mat-flat-button
+              color="primary"
+              class="full-width login-button"
+              type="submit"
+              [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing In...' : 'Login' }}
       </button>
+
     </form>
 
     <p class="register-link">
       Don't have an account?
       <a routerLink="/register">Register</a>
     </p>
+
   </mat-card>
 </div>

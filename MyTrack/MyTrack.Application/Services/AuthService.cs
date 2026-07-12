@@ -30,6 +30,12 @@ public class AuthService : IAuthService
     /// <inheritdoc/>
     public async Task<LoginResponse> RegisterAsync(RegisterUserRequest request)
     {
+        if (!IsValidPassword(request.Password))
+        {
+            throw new ArgumentException(
+                "Password must be at least 8 characters and include a number and special character.");
+        }
+
         var existingUser = await _userRepository.GetByEmailAsync(request.Email);
 
         if (existingUser is not null)
@@ -64,13 +70,28 @@ public class AuthService : IAuthService
     }
 
     /// <inheritdoc/>
+    /// <inheritdoc/>
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email);
-
-        if (user is null || !user.IsActive)
+        if (request is null)
         {
-            throw new ArgumentException("Invalid email or password.");
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var email = request.Email.Trim();
+
+        var user = await _userRepository.GetByEmailAsync(email);
+
+        if (user is null)
+        {
+            throw new ArgumentException(
+                "No account exists with this email address. Please register first.");
+        }
+
+        if (!user.IsActive)
+        {
+            throw new ArgumentException(
+                "This account is inactive. Please contact support.");
         }
 
         var result = _passwordHasher.VerifyHashedPassword(
@@ -80,7 +101,7 @@ public class AuthService : IAuthService
 
         if (result == PasswordVerificationResult.Failed)
         {
-            throw new ArgumentException("Invalid email or password.");
+            throw new ArgumentException("The password you entered is incorrect.");
         }
 
         return new LoginResponse

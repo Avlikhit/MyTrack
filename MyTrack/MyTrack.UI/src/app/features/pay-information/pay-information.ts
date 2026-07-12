@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
@@ -33,7 +33,9 @@ interface CalculatedPayInformation {
   imports: [
     CommonModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    RouterLink,
+    RouterLinkActive 
   ],
   templateUrl: './pay-information.html',
   styleUrl: './pay-information.scss'

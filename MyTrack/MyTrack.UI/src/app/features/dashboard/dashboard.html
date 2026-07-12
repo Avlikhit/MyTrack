@@ -1,41 +1,159 @@
 <div class="container mt-4">
 
-  <!-- Top Navigation -->
-  <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+  <!-- Branded Top Navigation -->
+  <header class="dashboard-header mb-4">
 
-    <div class="d-flex align-items-center gap-4">
+    <div class="dashboard-header-left">
 
       <a routerLink="/dashboard"
-         class="text-decoration-none fw-semibold text-dark">
-        Dashboard
+         class="brand-link"
+         aria-label="Go to MyTrack dashboard">
+
+        <img src="/branding/mytrack-logo-dark.svg"
+             alt="MyTrack"
+             class="dashboard-logo">
+
       </a>
 
-      <a routerLink="/projects"
-         class="text-decoration-none text-secondary">
-        Projects
-      </a>
+      <nav class="dashboard-navigation"
+           aria-label="Main navigation">
 
-      <a routerLink="/worklogs"
-         class="text-decoration-none text-secondary">
-        Work Logs
-      </a>
+        <a routerLink="/dashboard"
+           routerLinkActive="active-nav-link"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-link">
+          Dashboard
+        </a>
 
-      <a routerLink="/pay-information"
-         class="text-decoration-none text-secondary">
-        Pay
+        <a routerLink="/projects"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Projects
+        </a>
+
+        <a routerLink="/worklogs"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Work Logs
+        </a>
+
+        <a routerLink="/pay-information"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Pay
+        </a>
+
+      </nav>
+
+    </div>
+
+    <div class="dashboard-header-actions">
+
+      <button class="btn logout-button"
+              type="button"
+              (click)="logout()">
+        Logout
+      </button>
+
+      <!-- Notifications -->
+      <div class="notification-wrapper">
+
+        <button class="notification-button"
+                type="button"
+                title="Notifications"
+                aria-label="Open notifications"
+                (click)="toggleNotificationPanel()">
+
+          <span aria-hidden="true">&#128276;</span>
+
+          <span *ngIf="notificationCount > 0"
+                class="notification-badge">
+            {{ notificationCount > 9 ? '9+' : notificationCount }}
+          </span>
+
+        </button>
+
+        <div *ngIf="showNotificationPanel"
+             class="notification-panel shadow">
+
+          <div class="d-flex justify-content-between align-items-center border-bottom px-3 py-3">
+
+            <h5 class="mb-0">Notifications</h5>
+
+            <button class="btn-close"
+                    type="button"
+                    aria-label="Close notifications"
+                    (click)="closeNotificationPanel()">
+            </button>
+
+          </div>
+
+          <div class="notification-panel-body">
+
+            <div *ngIf="notificationMessages.length === 0"
+                 class="text-muted text-center p-4">
+              No new notifications.
+            </div>
+
+            <div *ngFor="let message of notificationMessages"
+                 class="notification-item">
+
+              <div class="notification-item-icon">
+                !
+              </div>
+
+              <div>
+                <div class="fw-semibold">
+                  Reminder
+                </div>
+
+                <div class="text-muted small">
+                  {{ message }}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="border-top px-3 py-3 d-flex justify-content-between gap-2">
+
+            <button class="btn btn-sm btn-outline-secondary"
+                    type="button"
+                    [disabled]="notificationMessages.length === 0"
+                    (click)="clearNotifications()">
+              Clear
+            </button>
+
+            <button class="btn btn-sm btn-outline-primary"
+                    type="button"
+                    (click)="openNotificationSettingsFromPanel()">
+              Settings
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Profile -->
+      <a routerLink="/profile"
+         class="profile-avatar"
+         title="Profile"
+         aria-label="Open profile">
+
+        {{ userName ? (userName.charAt(0) | uppercase) : 'U' }}
+
       </a>
 
     </div>
 
-    <button class="btn btn-outline-danger"
-            (click)="logout()">
-      Logout
-    </button>
-
-  </div>
+  </header>
 
   <!-- Welcome -->
-  <div class="mb-4">
+  <section class="mb-4">
+
     <h2 class="fw-bold">
       Welcome back{{ userName ? ', ' + userName : '' }}!
     </h2>
@@ -43,58 +161,99 @@
     <p class="text-muted">
       Here's a quick overview of your work activity.
     </p>
-  </div>
+
+  </section>
 
   <!-- Today Cards -->
-  <div class="row g-4 mb-4">
+  <section class="row g-4 mb-4">
 
     <div class="col-md-3">
+
       <div class="card shadow-sm h-100">
+
         <div class="card-body">
-          <h6 class="text-muted">Today Work Logs</h6>
-          <h2>{{ todayWorkLogs }}</h2>
+
+          <h6 class="text-muted">
+            Today Work Logs
+          </h6>
+
+          <h2>
+            {{ todayWorkLogs }}
+          </h2>
+
         </div>
+
       </div>
+
     </div>
 
     <div class="col-md-3">
+
       <div class="card shadow-sm h-100">
+
         <div class="card-body">
-          <h6 class="text-muted">Today Hours</h6>
-          <h2>{{ todayHours }}</h2>
+
+          <h6 class="text-muted">
+            Today Hours
+          </h6>
+
+          <h2>
+            {{ todayHours }}
+          </h2>
+
         </div>
+
       </div>
+
     </div>
 
-  </div>
+  </section>
 
-  <div class="card shadow-sm mb-4">
+  <!-- Weekly Progress -->
+  <section class="card shadow-sm mb-4">
+
     <div class="card-body">
 
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5 class="mb-0">Weekly Hours Progress</h5>
+
+        <h5 class="mb-0">
+          Weekly Hours Progress
+        </h5>
+
         <span class="text-muted">
           {{ weeklyHours }} / {{ weeklyGoal }} hours
         </span>
+
       </div>
 
-      <div class="progress" style="height: 22px;">
+      <div class="progress"
+           style="height: 22px;">
+
         <div class="progress-bar"
              role="progressbar"
-             [style.width.%]="weeklyProgressPercent">
+             [style.width.%]="weeklyProgressPercent"
+             [attr.aria-valuenow]="weeklyProgressPercent"
+             aria-valuemin="0"
+             aria-valuemax="100">
+
           {{ weeklyProgressPercent | number:'1.0-0' }}%
+
         </div>
+
       </div>
 
     </div>
-  </div>
+
+  </section>
 
   <!-- Dashboard Filter -->
-  <div class="row mb-4">
+  <section class="row mb-4 align-items-end">
 
     <div class="col-md-3">
 
-      <label class="form-label">Dashboard Range</label>
+      <label class="form-label">
+        Dashboard Range
+      </label>
 
       <select class="form-select"
               [(ngModel)]="selectedRange"
@@ -111,222 +270,328 @@
 
     </div>
 
-    <div class="col-md-3" *ngIf="selectedRange==='custom'">
+    <div class="col-md-3"
+         *ngIf="selectedRange === 'custom'">
 
-      <label class="form-label">Start Date</label>
+      <label class="form-label">
+        Start Date
+      </label>
 
-      <input type="date"
-             class="form-control"
+      <input class="form-control"
+             type="date"
              [(ngModel)]="customStartDate">
 
     </div>
 
-    <div class="col-md-3" *ngIf="selectedRange==='custom'">
+    <div class="col-md-3"
+         *ngIf="selectedRange === 'custom'">
 
-      <label class="form-label">End Date</label>
+      <label class="form-label">
+        End Date
+      </label>
 
-      <input type="date"
-             class="form-control"
+      <input class="form-control"
+             type="date"
              [(ngModel)]="customEndDate">
 
     </div>
 
-    <div class="col-md-2 d-flex align-items-end"
-         *ngIf="selectedRange==='custom'">
+    <div class="col-md-2"
+         *ngIf="selectedRange === 'custom'">
 
       <button class="btn btn-primary"
+              type="button"
               (click)="applyDashboardFilter()">
         Apply
       </button>
 
     </div>
 
-  </div>
+  </section>
 
   <!-- Summary Cards -->
-  <div class="row g-4 mb-3">
+  <section class="row g-4 mb-3">
 
     <div class="col-md-3">
+
       <div class="card shadow-sm h-100">
+
         <div class="card-body">
-          <h6 class="text-muted">Total Work Logs</h6>
-          <h2>{{ totalWorkLogs }}</h2>
+
+          <h6 class="text-muted">
+            Total Work Logs
+          </h6>
+
+          <h2>
+            {{ totalWorkLogs }}
+          </h2>
+
         </div>
+
       </div>
+
     </div>
 
     <div class="col-md-3">
+
       <div class="card shadow-sm h-100">
+
         <div class="card-body">
-          <h6 class="text-muted">Total Hours</h6>
-          <h2>{{ totalHours }}</h2>
+
+          <h6 class="text-muted">
+            Total Hours
+          </h6>
+
+          <h2>
+            {{ totalHours }}
+          </h2>
+
         </div>
+
       </div>
+
     </div>
 
     <div class="col-md-3">
+
       <div class="card shadow-sm h-100">
+
         <div class="card-body">
-          <h6 class="text-muted">Projects Worked</h6>
-          <h2>{{ totalProjects }}</h2>
+
+          <h6 class="text-muted">
+            Projects Worked
+          </h6>
+
+          <h2>
+            {{ totalProjects }}
+          </h2>
+
         </div>
+
       </div>
+
     </div>
 
     <div class="col-md-3">
+
       <div class="card shadow-sm h-100">
+
         <div class="card-body">
-          <h6 class="text-muted">Average Hours</h6>
-          <h2>{{ averageHours | number:'1.1-2' }}</h2>
+
+          <h6 class="text-muted">
+            Average Hours
+          </h6>
+
+          <h2>
+            {{ averageHours | number:'1.1-2' }}
+          </h2>
+
         </div>
+
       </div>
+
     </div>
 
-  </div>
+  </section>
 
-  <div class="mb-5">
-    <strong>Top Project:</strong>
+  <!-- Top Project -->
+  <section class="mb-5">
+
+    <strong>
+      Top Project:
+    </strong>
+
     {{ topProjectName || 'N/A' }}
-    <span class="text-muted">({{ topProjectHours }} hours)</span>
-  </div>
+
+    <span class="text-muted">
+      ({{ topProjectHours }} hours)
+    </span>
+
+  </section>
 
   <!-- Hours by Project -->
-  <div>
-    <div class="mt-5">
-      <h3>Hours by Project</h3>
+  <section class="mt-5">
 
-      <div *ngIf="hoursByProject.length > 0" class="mt-3">
-        <div *ngFor="let item of hoursByProject" class="mb-3">
+    <h3>
+      Hours by Project
+    </h3>
 
-          <div class="d-flex justify-content-between mb-1">
-            <strong>{{ item.projectName }}</strong>
-            <span>{{ item.hours }} hours</span>
-          </div>
+    <div *ngIf="hoursByProject.length > 0"
+         class="mt-3">
 
-          <div class="progress" style="height: 18px;">
-            <div class="progress-bar"
-                 role="progressbar"
-                 [style.width.%]="(item.hours / totalHours) * 100">
-            </div>
+      <div *ngFor="let item of hoursByProject"
+           class="mb-3">
+
+        <div class="d-flex justify-content-between mb-1">
+
+          <strong>
+            {{ item.projectName }}
+          </strong>
+
+          <span>
+            {{ item.hours }} hours
+          </span>
+
+        </div>
+
+        <div class="progress"
+             style="height: 18px;">
+
+          <div class="progress-bar"
+               role="progressbar"
+               [style.width.%]="totalHours > 0 ? (item.hours / totalHours) * 100 : 0">
           </div>
 
         </div>
+
       </div>
 
-      <div *ngIf="hoursByProject.length === 0" class="alert alert-warning">
-        No project hours available.
-      </div>
     </div>
 
-    <div *ngIf="hoursByProject.length===0"
-         class="alert alert-warning">
-
+    <div *ngIf="hoursByProject.length === 0"
+         class="alert alert-warning mt-3">
       No project hours available.
-
     </div>
 
-  </div>
+  </section>
 
   <!-- Recent Work Logs -->
+  <section class="mt-5">
 
-  <div class="mt-5">
+    <h3>
+      Recent Work Logs
+    </h3>
 
-    <h3>Recent Work Logs</h3>
+    <div class="table-responsive"
+         *ngIf="recentWorkLogs.length > 0">
 
-    <table class="table table-striped mt-3">
+      <table class="table table-striped mt-3">
 
-      <thead>
+        <thead>
 
-        <tr>
-          <th>Date</th>
-          <th>Project</th>
-          <th>Ticket</th>
-          <th>Task Type</th>
-          <th>Hours</th>
-        </tr>
+          <tr>
+            <th>Date</th>
+            <th>Project</th>
+            <th>Ticket</th>
+            <th>Task Type</th>
+            <th>Hours</th>
+          </tr>
 
-      </thead>
+        </thead>
 
-      <tbody>
+        <tbody>
 
-        <tr *ngFor="let workLog of recentWorkLogs">
+          <tr *ngFor="let workLog of recentWorkLogs">
 
-          <td>{{ workLog.workDate }}</td>
-          <td>{{ workLog.projectName }}</td>
-          <td>{{ workLog.ticketNumber }}</td>
-          <td>{{ workLog.taskType }}</td>
-          <td>{{ workLog.hoursWorked }}</td>
+            <td>
+              {{ workLog.workDate }}
+            </td>
 
-        </tr>
+            <td>
+              {{ workLog.projectName }}
+            </td>
 
-      </tbody>
+            <td>
+              {{ workLog.ticketNumber }}
+            </td>
 
-    </table>
+            <td>
+              {{ workLog.taskType }}
+            </td>
 
-    <div *ngIf="recentWorkLogs.length===0"
-         class="alert alert-warning">
+            <td>
+              {{ workLog.hoursWorked }}
+            </td>
 
-      No recent work logs available.
+          </tr>
+
+        </tbody>
+
+      </table>
 
     </div>
 
-  </div>
+    <div *ngIf="recentWorkLogs.length === 0"
+         class="alert alert-warning mt-3">
+      No recent work logs available.
+    </div>
+
+  </section>
 
   <!-- Hours by Date -->
+  <section class="mt-5 mb-5">
 
-  <div class="mt-5 mb-5">
+    <h3>
+      Hours by Date
+    </h3>
 
-    <h3>Hours by Date</h3>
+    <div class="table-responsive"
+         *ngIf="hoursByDate.length > 0">
 
-    <table class="table table-striped mt-3">
+      <table class="table table-striped mt-3">
 
-      <thead>
+        <thead>
 
-        <tr>
-          <th>Date</th>
-          <th>Hours</th>
-        </tr>
+          <tr>
+            <th>Date</th>
+            <th>Hours</th>
+          </tr>
 
-      </thead>
+        </thead>
 
-      <tbody>
+        <tbody>
 
-        <tr *ngFor="let item of hoursByDate">
+          <tr *ngFor="let item of hoursByDate">
 
-          <td>{{ item.workDate }}</td>
-          <td>{{ item.hours }}</td>
+            <td>
+              {{ item.workDate }}
+            </td>
 
-        </tr>
+            <td>
+              {{ item.hours }}
+            </td>
 
-      </tbody>
+          </tr>
 
-    </table>
+        </tbody>
 
-    <div *ngIf="hoursByDate.length===0"
-         class="alert alert-warning">
-
-      No hours by date available.
+      </table>
 
     </div>
 
-  </div>
+    <div *ngIf="hoursByDate.length === 0"
+         class="alert alert-warning mt-3">
+      No hours by date available.
+    </div>
 
-  <div class="mt-5 mb-5">
-    <h3>Quick Actions</h3>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="mt-5 mb-5">
+
+    <h3>
+      Quick Actions
+    </h3>
 
     <div class="d-flex gap-2 mt-3 flex-wrap">
-      <a routerLink="/worklogs" class="btn btn-success">
+
+      <a routerLink="/worklogs"
+         class="btn btn-success">
         Add / Manage Work Logs
       </a>
 
-      <a routerLink="/projects" class="btn btn-primary">
+      <a routerLink="/projects"
+         class="btn btn-primary">
         Add / Manage Projects
       </a>
 
-      <a routerLink="/pay-information" class="btn btn-outline-primary">
+      <a routerLink="/pay-information"
+         class="btn btn-outline-primary">
         Pay Summary
       </a>
+
     </div>
-  </div>
+
+  </section>
 
 </div>

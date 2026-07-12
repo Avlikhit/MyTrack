@@ -8,6 +8,8 @@ import { ProjectService } from '../../core/services/project.service';
 import { Project } from '../../core/models/project.model';
 import { AddProject } from './add-project/add-project';
 
+import { RouterLink, RouterLinkActive } from '@angular/router';
+
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +18,9 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './projects.html',
   styleUrl: './projects.scss'

@@ -1,3 +1,7 @@
+/* =========================================================
+   PROFILE PAGE HEADER
+   ========================================================= */
+
 .page-header {
   display: flex;
   align-items: center;
@@ -14,6 +18,7 @@
   display: flex;
   align-items: center;
   gap: 36px;
+  min-width: 0;
 }
 
 .brand-link {
@@ -38,12 +43,15 @@
 
   .page-navigation .nav-link {
     position: relative;
+    display: inline-flex;
+    align-items: center;
     padding: 10px 0;
     color: #cbd5e1;
     font-size: 16px;
     font-weight: 500;
     text-decoration: none;
     white-space: nowrap;
+    transition: color 0.2s ease;
   }
 
     .page-navigation .nav-link:hover,
@@ -65,6 +73,7 @@
 .page-header-actions {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .profile-avatar {
@@ -79,31 +88,75 @@
   font-size: 18px;
   font-weight: 700;
   text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-  .profile-avatar:hover {
+  .profile-avatar:hover,
+  .active-profile {
     background: #1d4ed8;
     color: #ffffff;
   }
 
-.project-color-preview {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #cbd5e1;
-  border-radius: 50%;
+  .profile-avatar:hover {
+    transform: scale(1.05);
+  }
+
+/* =========================================================
+   PROFILE CONTENT
+   ========================================================= */
+
+.profile-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
 }
+
+  .profile-card .card-body {
+    padding: 28px;
+  }
+
+.section-heading {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.form-label {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.form-control:disabled {
+  background: #e9eef5;
+  color: #475569;
+  cursor: not-allowed;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.password-rules {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 992px) {
   .page-header {
     align-items: stretch;
     flex-direction: column;
+    gap: 18px;
   }
 
   .page-header-left {
     align-items: flex-start;
     flex-direction: column;
     gap: 14px;
+    width: 100%;
   }
 
   .page-navigation {
@@ -112,5 +165,33 @@
 
   .page-header-actions {
     justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    padding: 16px;
+  }
+
+  .page-logo {
+    width: 155px;
+    height: 48px;
+  }
+
+  .page-navigation {
+    gap: 16px;
+  }
+
+    .page-navigation .nav-link {
+      font-size: 14px;
+    }
+
+  .page-header-actions {
+    justify-content: flex-start;
+  }
+
+  .profile-card .card-body {
+    padding: 20px;
   }
 }

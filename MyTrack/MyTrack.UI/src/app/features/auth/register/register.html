@@ -1,1 +1,139 @@
-<p>register works!</p>
+<div class="register-page">
+
+  <div class="register-card">
+
+    <div class="brand-section">
+
+      <img src="/branding/mytrack-logo.svg"
+           alt="MyTrack logo"
+           class="register-logo">
+
+      <p class="brand-tagline">
+        Track • Manage • Grow
+      </p>
+
+      <p class="subtitle">
+        Create your MyTrack account.
+      </p>
+
+    </div>
+
+    <div *ngIf="errorMessage"
+         class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label class="form-label">
+          First Name <span class="text-danger">*</span>
+        </label>
+
+        <input class="form-control"
+               type="text"
+               [(ngModel)]="firstName">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">
+          Last Name <span class="text-danger">*</span>
+        </label>
+
+        <input class="form-control"
+               type="text"
+               [(ngModel)]="lastName">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">
+          Email <span class="text-danger">*</span>
+        </label>
+
+        <input class="form-control"
+               type="email"
+               [(ngModel)]="email">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Role</label>
+
+        <input class="form-control"
+               type="text"
+               placeholder="Software Engineer"
+               [(ngModel)]="role">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Contact Number</label>
+
+        <input class="form-control"
+               type="tel"
+               [(ngModel)]="contactNumber">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">
+          Password <span class="text-danger">*</span>
+        </label>
+
+        <input class="form-control"
+               type="password"
+               [(ngModel)]="password">
+
+        <small class="text-muted">
+          Minimum 8 characters with uppercase, lowercase, a number, and a special character.
+        </small>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">
+          Confirm Password <span class="text-danger">*</span>
+        </label>
+
+        <input class="form-control"
+               type="password"
+               [(ngModel)]="confirmPassword">
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Home Address</label>
+
+        <textarea class="form-control"
+                  rows="3"
+                  [(ngModel)]="homeAddress">
+        </textarea>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Work Address</label>
+
+        <textarea class="form-control"
+                  rows="3"
+                  [(ngModel)]="workAddress">
+        </textarea>
+      </div>
+
+    </div>
+
+    <div class="register-actions">
+
+      <a routerLink="/login"
+         class="btn btn-outline-secondary">
+        Back to Login
+      </a>
+
+      <button class="btn btn-primary"
+              type="button"
+              [disabled]="isSubmitting"
+              (click)="register()">
+
+        {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,39 +1,178 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+
+/*
+  MyTrack global design system
+  Primary blue: #2563eb
+  Accent green: #10b981
+  Dark navy: #0f172a
+  Page background: #f8fafc
+*/
 
 html {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
+
+  @include mat.theme( ( color: ( primary: mat.$azure-palette, tertiary: mat.$green-palette, ), typography: Inter, density: 0, ) );
+}
+
+:root {
+  --mytrack-primary: #2563eb;
+  --mytrack-primary-dark: #1d4ed8;
+  --mytrack-secondary: #10b981;
+  --mytrack-secondary-dark: #059669;
+  --mytrack-navy: #0f172a;
+  --mytrack-text: #1e293b;
+  --mytrack-text-muted: #64748b;
+  --mytrack-background: #f8fafc;
+  --mytrack-surface: #ffffff;
+  --mytrack-border: #e2e8f0;
+  --mytrack-success: #10b981;
+  --mytrack-warning: #f59e0b;
+  --mytrack-danger: #ef4444;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
+  background: var(--mytrack-background);
+  color: var(--mytrack-text);
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
 }
-/* You can add global styles to this file, and also import other style files */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  color: var(--mytrack-navy);
+  font-family: 'Poppins', 'Inter', Arial, sans-serif;
+  font-weight: 600;
+}
+
+a {
+  color: var(--mytrack-primary);
+}
+
+  a:hover {
+    color: var(--mytrack-primary-dark);
+  }
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.card {
+  border: 1px solid var(--mytrack-border);
+  border-radius: 14px;
+  background: var(--mytrack-surface);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+.form-control,
+.form-select {
+  min-height: 46px;
+  border-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--mytrack-primary);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+  }
+
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  border-color: var(--mytrack-primary);
+  background: var(--mytrack-primary);
+}
+
+  .btn-primary:hover,
+  .btn-primary:focus {
+    border-color: var(--mytrack-primary-dark);
+    background: var(--mytrack-primary-dark);
+  }
+
+.btn-success {
+  border-color: var(--mytrack-success);
+  background: var(--mytrack-success);
+}
+
+  .btn-success:hover,
+  .btn-success:focus {
+    border-color: var(--mytrack-secondary-dark);
+    background: var(--mytrack-secondary-dark);
+  }
+
+.btn-outline-primary {
+  border-color: var(--mytrack-primary);
+  color: var(--mytrack-primary);
+}
+
+  .btn-outline-primary:hover {
+    background: var(--mytrack-primary);
+    color: #ffffff;
+  }
+
+.btn-outline-success {
+  border-color: var(--mytrack-success);
+  color: var(--mytrack-success);
+}
+
+  .btn-outline-success:hover {
+    background: var(--mytrack-success);
+    color: #ffffff;
+  }
+
+.progress {
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient( 90deg, var(--mytrack-primary) 0%, var(--mytrack-secondary) 100% );
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: var(--mytrack-border);
+}
+
+  .table thead th {
+    color: var(--mytrack-navy);
+    font-weight: 600;
+  }
+
+.alert {
+  border-radius: 10px;
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 18px;
+}
+
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-filled-button-container-color: var(--mytrack-primary);
+}
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--mytrack-primary);
+  --mdc-linear-progress-track-color: #dbeafe;
+}

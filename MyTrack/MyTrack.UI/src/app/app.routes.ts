@@ -11,6 +11,7 @@ import { ProjectDetails } from './features/projects/project-details/project-deta
 import { PayInformation } from './features/pay-information/pay-information';
 import { PayrollSettings } from './features/payroll-settings/payroll-settings';
 import { PayDetails } from './features/pay-information/pay-details/pay-details';
+import { Profile } from './features/profile/profile';
 
 export const routes: Routes = [
   {
@@ -59,6 +60,11 @@ export const routes: Routes = [
   {
     path: 'pay-information/:id',
     component: PayDetails,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'profile',
+    component: Profile,
     canActivate: [authGuard]
   },
   {

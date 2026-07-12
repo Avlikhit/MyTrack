@@ -1,75 +1,196 @@
-<div class="container mt-5">
+<div class="container mt-4">
 
+  <!-- Branded Header -->
+  <header class="page-header mb-4">
+
+    <div class="page-header-left">
+
+      <a routerLink="/dashboard"
+         class="brand-link"
+         aria-label="Go to dashboard">
+
+        <img src="/branding/mytrack-logo-dark.svg"
+             alt="MyTrack"
+             class="page-logo">
+
+      </a>
+
+      <nav class="page-navigation"
+           aria-label="Main navigation">
+
+        <a routerLink="/dashboard"
+           routerLinkActive="active-nav-link"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-link">
+          Dashboard
+        </a>
+
+        <a routerLink="/projects"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Projects
+        </a>
+
+        <a routerLink="/worklogs"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Work Logs
+        </a>
+
+        <a routerLink="/pay-information"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Pay
+        </a>
+
+      </nav>
+
+    </div>
+
+    <div class="page-header-actions">
+
+      <a routerLink="/profile"
+         class="profile-avatar"
+         title="Profile"
+         aria-label="Open profile">
+        U
+      </a>
+
+    </div>
+
+  </header>
+
+  <!-- Page Title -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Projects</h1>
+
+    <div>
+      <h1 class="mb-1">Projects</h1>
+
+      <p class="text-muted mb-0">
+        Manage your projects and payroll settings.
+      </p>
+    </div>
 
     <button class="btn btn-primary"
             type="button"
             (click)="openAddProject()">
       Add Project
     </button>
+
   </div>
 
   <!-- Loading -->
-  <div *ngIf="isLoading" class="alert alert-info">
+  <div *ngIf="isLoading"
+       class="alert alert-info">
     Loading projects...
   </div>
 
   <!-- Error -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
+  <div *ngIf="errorMessage"
+       class="alert alert-danger">
     {{ errorMessage }}
   </div>
 
   <!-- Projects Table -->
-  <table class="table table-striped" *ngIf="!isLoading">
+  <div class="table-responsive"
+       *ngIf="!isLoading && projects.length > 0">
 
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Color</th>
-        <th>Display Order</th>
-        <th>Default</th>
-        <th>Active</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+    <table class="table table-striped align-middle">
 
-    <tbody>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Color</th>
+          <th>Display Order</th>
+          <th>Default</th>
+          <th>Active</th>
+          <th style="width: 230px;">Actions</th>
+        </tr>
+      </thead>
 
-      <tr *ngFor="let project of projects">
+      <tbody>
 
-        <td>{{ project.name }}</td>
-        <td>{{ project.description }}</td>
-        <td>{{ project.colorCode }}</td>
-        <td>{{ project.displayOrder }}</td>
-        <td>{{ project.isDefault ? 'Yes' : 'No' }}</td>
-        <td>{{ project.isActive ? 'Yes' : 'No' }}</td>
+        <tr *ngFor="let project of projects">
 
-        <td>
-          <button class="btn btn-sm btn-outline-info me-2"
-                  type="button"
-                  (click)="view(project.id)">
-            View
-          </button>
+          <td>
+            <strong>
+              {{ project.name }}
+            </strong>
+          </td>
 
-          <button class="btn btn-sm btn-outline-primary me-2"
-                  type="button"
-                  (click)="openEditProject(project)">
-            Edit
-          </button>
+          <td>
+            {{ project.description || 'N/A' }}
+          </td>
 
-          <button class="btn btn-sm btn-outline-danger"
-                  type="button"
-                  (click)="deleteProject(project)">
-            Delete
-          </button>
-        </td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
 
-      </tr>
+              <span class="project-color-preview"
+                    [style.background]="project.colorCode">
+              </span>
 
-    </tbody>
+              <span>
+                {{ project.colorCode }}
+              </span>
 
-  </table>
+            </div>
+          </td>
+
+          <td>
+            {{ project.displayOrder }}
+          </td>
+
+          <td>
+            {{ project.isDefault ? 'Yes' : 'No' }}
+          </td>
+
+          <td>
+            <span class="badge"
+                  [class.text-bg-success]="project.isActive"
+                  [class.text-bg-secondary]="!project.isActive">
+
+              {{ project.isActive ? 'Active' : 'Inactive' }}
+
+            </span>
+          </td>
+
+          <td>
+
+            <button class="btn btn-sm btn-outline-info me-2"
+                    type="button"
+                    (click)="view(project.id)">
+              View
+            </button>
+
+            <button class="btn btn-sm btn-outline-primary me-2"
+                    type="button"
+                    (click)="openEditProject(project)">
+              Edit
+            </button>
+
+            <button class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="deleteProject(project)">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && projects.length === 0"
+       class="alert alert-warning">
+
+    No projects found. Click <strong>Add Project</strong> to create your first project.
+
+  </div>
 
 </div>

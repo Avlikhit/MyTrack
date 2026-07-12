@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180" role="img" aria-labelledby="title description">
+
+  <title id="title">MyTrack</title>
+
+  <desc id="description">
+    MyTrack logo with a geometric M, completion checkmark,
+    progress dots, and the words MyTrack.
+  </desc>
+
+  <defs>
+    <linearGradient id="mytrackBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563EB"></stop>
+      <stop offset="100%" stop-color="#1D4ED8"></stop>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(10, 10) scale(0.95)">
+    <path d="
+      M 18 118
+      L 18 28
+      Q 18 18 28 18
+      L 38 18
+      L 80 66
+      L 122 18
+      L 132 18
+      Q 142 18 142 28
+      L 142 98
+      L 118 98
+      L 118 55
+      L 88 91
+      Q 80 101 72 91
+      L 42 55
+      L 42 118
+      Z" fill="url(#mytrackBlue)"></path>
+
+    <path d="
+      M 91 94
+      L 108 111
+      L 142 69" fill="none" stroke="#10B981" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"></path>
+
+    <circle cx="130" cy="48" r="6" fill="#10B981"></circle>
+    <circle cx="142" cy="33" r="5" fill="#10B981"></circle>
+    <circle cx="151" cy="18" r="4" fill="#10B981"></circle>
+  </g>
+
+  <text x="190" y="93" font-family="Inter, Poppins, Arial, sans-serif" font-size="72" font-weight="700" fill="#0F172A">
+    My<tspan fill="#2563EB">Track</tspan>
+  </text>
+
+  <text x="194" y="132" font-family="Inter, Poppins, Arial, sans-serif" font-size="18" font-weight="500" letter-spacing="6" fill="#64748B">
+    TRACK
+    <tspan fill="#10B981"> • </tspan>
+    MANAGE
+    <tspan fill="#10B981"> • </tspan>
+    GROW
+  </text>
+
+</svg>

@@ -1,0 +1,374 @@
+<div class="container mt-4">
+
+  <!-- Branded Header -->
+  <header class="page-header mb-4">
+
+    <div class="page-header-left">
+
+      <a routerLink="/dashboard"
+         class="brand-link"
+         aria-label="Go to dashboard">
+
+        <img src="/branding/mytrack-logo-dark.svg"
+             alt="MyTrack"
+             class="page-logo">
+
+      </a>
+
+      <nav class="page-navigation"
+           aria-label="Main navigation">
+
+        <a routerLink="/dashboard"
+           routerLinkActive="active-nav-link"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-link">
+          Dashboard
+        </a>
+
+        <a routerLink="/projects"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Projects
+        </a>
+
+        <a routerLink="/worklogs"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Work Logs
+        </a>
+
+        <a routerLink="/pay-information"
+           routerLinkActive="active-nav-link"
+           class="nav-link">
+          Pay
+        </a>
+
+      </nav>
+
+    </div>
+
+    <div class="page-header-actions">
+
+      <a routerLink="/profile"
+         class="profile-avatar active-profile"
+         title="Profile"
+         aria-label="Open profile">
+
+        {{ firstName ? (firstName.charAt(0) | uppercase) : 'U' }}
+
+      </a>
+
+    </div>
+
+  </header>
+
+  <!-- Page Heading -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+      <h1 class="mb-1">
+        Profile
+      </h1>
+
+      <p class="text-muted mb-0">
+        Manage your personal information, addresses, and password.
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading"
+       class="alert alert-info">
+    Loading profile...
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage"
+       class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Success -->
+  <div *ngIf="successMessage"
+       class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <!-- Personal Information -->
+  <div class="card profile-card shadow-sm mb-4">
+
+    <div class="card-body">
+
+      <div class="section-heading mb-4">
+
+        <div>
+
+          <h4 class="mb-1">
+            Personal Information
+          </h4>
+
+          <p class="text-muted mb-0">
+            Update your basic account details.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="row g-3">
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            First Name
+            <span class="text-danger">*</span>
+          </label>
+
+          <input class="form-control"
+                 type="text"
+                 [(ngModel)]="firstName">
+
+        </div>
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Last Name
+            <span class="text-danger">*</span>
+          </label>
+
+          <input class="form-control"
+                 type="text"
+                 [(ngModel)]="lastName">
+
+        </div>
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Email
+          </label>
+
+          <input class="form-control"
+                 type="email"
+                 [(ngModel)]="email"
+                 disabled>
+
+          <small class="text-muted">
+            Email cannot be changed from this page.
+          </small>
+
+        </div>
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Role
+          </label>
+
+          <input class="form-control"
+                 type="text"
+                 [(ngModel)]="role">
+
+        </div>
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Contact Number
+          </label>
+
+          <input class="form-control"
+                 type="tel"
+                 [(ngModel)]="contactNumber">
+
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+
+        <button class="btn btn-primary"
+                type="button"
+                (click)="saveProfile()">
+          Save Profile
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Addresses -->
+  <div class="card profile-card shadow-sm mb-4">
+
+    <div class="card-body">
+
+      <div class="section-heading mb-4">
+
+        <div>
+
+          <h4 class="mb-1">
+            Addresses
+          </h4>
+
+          <p class="text-muted mb-0">
+            Keep your home and work locations up to date.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="row g-3">
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Home Address
+          </label>
+
+          <textarea class="form-control"
+                    rows="4"
+                    [(ngModel)]="homeAddress">
+          </textarea>
+
+        </div>
+
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Work Address
+          </label>
+
+          <textarea class="form-control"
+                    rows="4"
+                    [(ngModel)]="workAddress">
+          </textarea>
+
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+
+        <button class="btn btn-primary"
+                type="button"
+                (click)="saveProfile()">
+          Save Addresses
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Security -->
+  <div class="card profile-card shadow-sm mb-5">
+
+    <div class="card-body">
+
+      <div class="section-heading mb-4">
+
+        <div>
+
+          <h4 class="mb-1">
+            Security
+          </h4>
+
+          <p class="text-muted mb-0">
+            Change your password using your current password.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div *ngIf="passwordErrorMessage"
+           class="alert alert-danger">
+        {{ passwordErrorMessage }}
+      </div>
+
+      <div *ngIf="passwordSuccessMessage"
+           class="alert alert-success">
+        {{ passwordSuccessMessage }}
+      </div>
+
+      <div class="row g-3">
+
+        <div class="col-md-4">
+
+          <label class="form-label">
+            Current Password
+            <span class="text-danger">*</span>
+          </label>
+
+          <input class="form-control"
+                 type="password"
+                 autocomplete="current-password"
+                 [(ngModel)]="currentPassword">
+
+        </div>
+
+        <div class="col-md-4">
+
+          <label class="form-label">
+            New Password
+            <span class="text-danger">*</span>
+          </label>
+
+          <input class="form-control"
+                 type="password"
+                 autocomplete="new-password"
+                 [(ngModel)]="newPassword">
+
+        </div>
+
+        <div class="col-md-4">
+
+          <label class="form-label">
+            Confirm Password
+            <span class="text-danger">*</span>
+          </label>
+
+          <input class="form-control"
+                 type="password"
+                 autocomplete="new-password"
+                 [(ngModel)]="confirmPassword">
+
+        </div>
+
+      </div>
+
+      <div class="password-rules mt-3">
+
+        <small class="text-muted d-block">
+          Password must be at least 8 characters.
+        </small>
+
+        <small class="text-muted d-block">
+          It must include uppercase, lowercase, one number, and one special character.
+        </small>
+
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+
+        <button class="btn btn-outline-primary"
+                type="button"
+                (click)="changePassword()">
+          Change Password
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

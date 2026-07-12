@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
 import { RegisterUserRequest } from '../models/register-user-request.model';
+import { UserProfile } from '../models/user-profile.model';
+import { UpdateUserProfileRequest } from '../models/update-user-profile-request.model';
+import { ChangePasswordRequest } from '../models/change-password-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +22,18 @@ export class AuthService {
 
   register(request: RegisterUserRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/register`, request);
+  }
+
+  getProfile() {
+    return this.http.get<UserProfile>(`${this.apiUrl}/profile`);
+  }
+
+  updateProfile(request: UpdateUserProfileRequest) {
+    return this.http.put<UserProfile>(`${this.apiUrl}/profile`, request);
+  }
+
+  changePassword(request: ChangePasswordRequest) {
+    return this.http.put<void>(`${this.apiUrl}/change-password`, request);
   }
 
   saveToken(token: string): void {

@@ -1,0 +1,108 @@
+<h2 mat-dialog-title>
+  Notification Settings
+</h2>
+
+<mat-dialog-content>
+
+  <div *ngIf="isLoading" class="alert alert-info">
+    Loading notification settings...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading">
+
+    <div class="form-check form-switch mb-4">
+      <input class="form-check-input"
+             type="checkbox"
+             id="notificationsEnabled"
+             [(ngModel)]="notificationsEnabled">
+
+      <label class="form-check-label fw-semibold"
+             for="notificationsEnabled">
+        Enable Notifications
+      </label>
+    </div>
+
+    <fieldset [disabled]="!notificationsEnabled">
+
+      <div class="border rounded p-3 mb-4">
+
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input"
+                 type="checkbox"
+                 id="dailyReminderEnabled"
+                 [(ngModel)]="dailyWorkLogReminderEnabled">
+
+          <label class="form-check-label fw-semibold"
+                 for="dailyReminderEnabled">
+            Daily Work Log Reminder
+          </label>
+        </div>
+
+        <div *ngIf="dailyWorkLogReminderEnabled">
+          <label class="form-label">
+            Reminder Time
+          </label>
+
+          <input class="form-control"
+                 type="time"
+                 [(ngModel)]="dailyReminderTime">
+        </div>
+
+      </div>
+
+      <div class="border rounded p-3">
+
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input"
+                 type="checkbox"
+                 id="monthlyReminderEnabled"
+                 [(ngModel)]="monthlySummaryReminderEnabled">
+
+          <label class="form-check-label fw-semibold"
+                 for="monthlyReminderEnabled">
+            Monthly Summary Reminder
+          </label>
+        </div>
+
+        <div *ngIf="monthlySummaryReminderEnabled">
+          <label class="form-label">
+            Days Before Next Month
+          </label>
+
+          <input class="form-control"
+                 type="number"
+                 min="0"
+                 max="31"
+                 [(ngModel)]="monthlyReminderDaysBefore">
+        </div>
+
+      </div>
+
+    </fieldset>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button mat-button
+          type="button"
+          [disabled]="isSaving"
+          (click)="cancel()">
+    Cancel
+  </button>
+
+  <button mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="isLoading || isSaving"
+          (click)="save()">
+    {{ isSaving ? 'Saving...' : 'Save' }}
+  </button>
+
+</mat-dialog-actions>
